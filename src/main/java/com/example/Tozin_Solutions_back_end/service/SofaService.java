@@ -1,8 +1,11 @@
 package com.example.Tozin_Solutions_back_end.service;
 
+import com.example.Tozin_Solutions_back_end.dto.movimentacaoEstoqueDTO.RegistrarMovimentacaoDTO;
+import com.example.Tozin_Solutions_back_end.dto.quantidadePecaEmSofaDTO.RegistroQuantidadePecaEmSofaDTO;
 import com.example.Tozin_Solutions_back_end.dto.sofaDTO.AtualizarSofaDTO;
 import com.example.Tozin_Solutions_back_end.dto.sofaDTO.CadastrarSofaDTO;
 import com.example.Tozin_Solutions_back_end.model.Peca;
+import com.example.Tozin_Solutions_back_end.model.QuantidadePecaEmSofa;
 import com.example.Tozin_Solutions_back_end.model.Sofa;
 import com.example.Tozin_Solutions_back_end.repository.SofaRepository;
 import jakarta.validation.Valid;
@@ -21,6 +24,12 @@ public class SofaService {
     @Autowired
     private PecaService pecaService;
 
+    @Autowired
+    private MovimentacaoEstoqueService movimentacaoService;
+
+    @Autowired
+    private QuantidadePecaEmSofaService quantidadePecaEmSofaService;
+
     public Sofa salvarSofa(@Valid  CadastrarSofaDTO dadosSofa){
         Sofa sofa = new Sofa();
 
@@ -38,8 +47,15 @@ public class SofaService {
         return repository.findById(id);
     }
 
-    public Optional<Sofa> adicionarPeca(Long idSofa, Long idPeca){
+    public Optional<Sofa> adicionarPeca(Long idSofa, Long idPeca, Integer quantidadePecas){
         Optional<Peca> peca = pecaService.buscarPorId(idPeca);
+
+        RegistroQuantidadePecaEmSofaDTO configuracao = new RegistroQuantidadePecaEmSofaDTO(idSofa, idPeca, quantidadePecas);
+        quantidadePecaEmSofaService.salvarConfiguracao(configuracao);
+
+        pecaService.removerQuantidadeEstoque(peca.get().getId(), quantidadePecas);
+
+        RegistrarMovimentacaoDTO movimentacao = new RegistrarMovimentacaoDTO(quantidadePecas, 0, peca.get());
 
         return repository.findById(idSofa)
                 .map(sofa -> {
@@ -54,6 +70,10 @@ public class SofaService {
 
     public Optional<Sofa> removerPeca(Long idSofa, Long idPeca){
         Optional<Peca> peca = pecaService.buscarPorId(idPeca);
+
+        Optional<QuantidadePecaEmSofa> configuracao = quantidadePecaEmSofaService.encontrarPorIdSofaEPeca(idSofa, idPeca);
+
+        pecaService.adicionarQuantidadeEstoque(peca.get().getId(), configuracao.get().getQuantidadePeca());
 
         return repository.findById(idSofa)
                 .map(sofa -> {

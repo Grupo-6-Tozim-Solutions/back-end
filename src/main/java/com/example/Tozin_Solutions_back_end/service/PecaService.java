@@ -1,5 +1,6 @@
 package com.example.Tozin_Solutions_back_end.service;
 
+import com.example.Tozin_Solutions_back_end.dto.movimentacaoEstoqueDTO.RegistrarMovimentacaoDTO;
 import com.example.Tozin_Solutions_back_end.dto.pecaDTO.AtualizarPecaDTO;
 import com.example.Tozin_Solutions_back_end.dto.pecaDTO.CadastrarPecaDTO;
 import com.example.Tozin_Solutions_back_end.model.Peca;
@@ -17,6 +18,9 @@ public class PecaService {
     @Autowired
     private PecaRepository repository;
 
+    @Autowired
+    private MovimentacaoEstoqueService movimentacaoService;
+
     public Peca salvarPeca(@Valid CadastrarPecaDTO dadosNovaPeca){
         Peca novaPeca = new Peca();
 
@@ -25,6 +29,9 @@ public class PecaService {
         novaPeca.setQuantidadeMinima(dadosNovaPeca.getQuantidadeMinima());
 
         repository.save(novaPeca);
+
+        //RegistrarMovimentacaoDTO novaMovimentacao = new RegistrarMovimentacaoDTO(0, dadosNovaPeca.getQuantidadeEstoque(), novaPeca);
+        //movimentacaoService.registrarMovimentacao(novaMovimentacao);
         return novaPeca;
     }
 
@@ -36,10 +43,23 @@ public class PecaService {
         return repository.findById(id);
     }
 
-    public Optional<Peca> atualizarEstoque(Long id, Integer quantidadeAdicional){
+    public Optional<Peca> adicionarQuantidadeEstoque(Long id, Integer quantidadeAdicional){
         return repository.findById(id).map(peca -> {
-            if (quantidadeAdicional != null){
+            if (quantidadeAdicional != null && quantidadeAdicional > 0){
                 peca.setQuantidadeEstoque(peca.getQuantidadeEstoque() + quantidadeAdicional);
+                //RegistrarMovimentacaoDTO movimentacao = new RegistrarMovimentacaoDTO(0, quantidadeAdicional, peca);
+               // movimentacaoService.registrarMovimentacao(movimentacao);
+            }
+            return repository.save(peca);
+        });
+    }
+
+    public Optional<Peca> removerQuantidadeEstoque(Long id, Integer quantidadeRemovida){
+        return repository.findById(id).map(peca -> {
+            if (quantidadeRemovida != null && quantidadeRemovida > 0){
+                peca.setQuantidadeEstoque(peca.getQuantidadeEstoque() - quantidadeRemovida);
+                //RegistrarMovimentacaoDTO movimentacao = new RegistrarMovimentacaoDTO(quantidadeRemovida, 0, peca);
+                //movimentacaoService.registrarMovimentacao(movimentacao);
             }
             return repository.save(peca);
         });

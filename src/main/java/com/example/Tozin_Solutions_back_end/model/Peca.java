@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 public class Peca {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -17,8 +18,7 @@ public class Peca {
     private Integer quantidadeMinima;
     private LocalDateTime dataCadastro = LocalDateTime.now();
 
-    public Peca(Long id, String nome, Integer quantidadeEstoque, Integer quantidadeMinima) {
-        this.id = id;
+    public Peca(String nome, Integer quantidadeEstoque, Integer quantidadeMinima) {
         this.nome = nome;
         this.quantidadeEstoque = quantidadeEstoque;
         this.quantidadeMinima = quantidadeMinima;

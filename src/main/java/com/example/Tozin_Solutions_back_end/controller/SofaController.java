@@ -44,9 +44,9 @@ public class SofaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/adicionarPeca/{idSofa}/{idPeca}")
-    public ResponseEntity<Sofa> adicionarPeca(@PathVariable Long idSofa, @PathVariable Long idPeca){
-        return service.adicionarPeca(idSofa, idPeca)
+    @PutMapping("/adicionarPeca/{idSofa}/{idPeca}/{quantidade}")
+    public ResponseEntity<Sofa> adicionarPeca(@PathVariable Long idSofa, @PathVariable Long idPeca, @PathVariable Integer quantidade){
+        return service.adicionarPeca(idSofa, idPeca, quantidade)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
