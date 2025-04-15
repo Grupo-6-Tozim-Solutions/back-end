@@ -1,6 +1,4 @@
-package com.example.Tozin_Solutions_back_end.dto.PecaDTO;
-
-import jakarta.validation.constraints.NotNull;
+package com.example.Tozin_Solutions_back_end.dto.pecaDTO;
 
 public class AtualizarPecaDTO {
     private String nome;

@@ -1,7 +1,7 @@
 package com.example.Tozin_Solutions_back_end.service;
 
-import com.example.Tozin_Solutions_back_end.dto.PecaDTO.AtualizarPecaDTO;
-import com.example.Tozin_Solutions_back_end.dto.PecaDTO.CadastrarPecaDTO;
+import com.example.Tozin_Solutions_back_end.dto.pecaDTO.AtualizarPecaDTO;
+import com.example.Tozin_Solutions_back_end.dto.pecaDTO.CadastrarPecaDTO;
 import com.example.Tozin_Solutions_back_end.model.Peca;
 import com.example.Tozin_Solutions_back_end.repository.PecaRepository;
 import jakarta.validation.Valid;
