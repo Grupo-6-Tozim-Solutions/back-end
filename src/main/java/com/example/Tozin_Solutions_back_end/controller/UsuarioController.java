@@ -1,6 +1,7 @@
 package com.example.Tozin_Solutions_back_end.controller;
 
-import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.CadastrarAtualizarUsuarioDTO;
+import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.AtualizarUsuarioDTO;
+import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.CadastrarUsuarioDTO;
 import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.DadosUsuarioDTO;
 import com.example.Tozin_Solutions_back_end.service.UsuarioService;
 import jakarta.validation.Valid;
@@ -15,7 +16,7 @@ public class UsuarioController {
     private UsuarioService service;
 
     @PostMapping
-    public ResponseEntity cadastro(@RequestBody @Valid CadastrarAtualizarUsuarioDTO dadosCadastro){
+    public ResponseEntity cadastro(@RequestBody @Valid CadastrarUsuarioDTO dadosCadastro){
         return ResponseEntity.ok(service.cadastrarUsuario(dadosCadastro));
     }
 
@@ -32,7 +33,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DadosUsuarioDTO> atualizar(@PathVariable Long id, @RequestBody CadastrarAtualizarUsuarioDTO dados){
+    public ResponseEntity<DadosUsuarioDTO> atualizar(@PathVariable Long id, @RequestBody AtualizarUsuarioDTO dados){
         return service.atualizarUsuario(id, dados)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
