@@ -30,8 +30,8 @@ public class PecaService {
 
         repository.save(novaPeca);
 
-        //RegistrarMovimentacaoDTO novaMovimentacao = new RegistrarMovimentacaoDTO(0, dadosNovaPeca.getQuantidadeEstoque(), novaPeca);
-        //movimentacaoService.registrarMovimentacao(novaMovimentacao);
+        RegistrarMovimentacaoDTO novaMovimentacao = new RegistrarMovimentacaoDTO(0, dadosNovaPeca.getQuantidadeEstoque(), novaPeca);
+        movimentacaoService.registrarMovimentacao(novaMovimentacao);
         return novaPeca;
     }
 
@@ -47,8 +47,8 @@ public class PecaService {
         return repository.findById(id).map(peca -> {
             if (quantidadeAdicional != null && quantidadeAdicional > 0){
                 peca.setQuantidadeEstoque(peca.getQuantidadeEstoque() + quantidadeAdicional);
-                //RegistrarMovimentacaoDTO movimentacao = new RegistrarMovimentacaoDTO(0, quantidadeAdicional, peca);
-               // movimentacaoService.registrarMovimentacao(movimentacao);
+                RegistrarMovimentacaoDTO movimentacao = new RegistrarMovimentacaoDTO(0, quantidadeAdicional, peca);
+                movimentacaoService.registrarMovimentacao(movimentacao);
             }
             return repository.save(peca);
         });
@@ -58,8 +58,8 @@ public class PecaService {
         return repository.findById(id).map(peca -> {
             if (quantidadeRemovida != null && quantidadeRemovida > 0){
                 peca.setQuantidadeEstoque(peca.getQuantidadeEstoque() - quantidadeRemovida);
-                //RegistrarMovimentacaoDTO movimentacao = new RegistrarMovimentacaoDTO(quantidadeRemovida, 0, peca);
-                //movimentacaoService.registrarMovimentacao(movimentacao);
+                RegistrarMovimentacaoDTO movimentacao = new RegistrarMovimentacaoDTO(quantidadeRemovida, 0, peca);
+                movimentacaoService.registrarMovimentacao(movimentacao);
             }
             return repository.save(peca);
         });
