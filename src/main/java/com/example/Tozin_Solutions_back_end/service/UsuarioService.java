@@ -3,6 +3,7 @@ package com.example.Tozin_Solutions_back_end.service;
 import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.AtualizarUsuarioDTO;
 import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.DadosUsuarioDTO;
 import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.CadastrarUsuarioDTO;
+import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.LoginUsuarioDTO;
 import com.example.Tozin_Solutions_back_end.model.Usuario;
 import com.example.Tozin_Solutions_back_end.repository.UsuarioRepository;
 import jakarta.validation.Valid;
@@ -27,12 +28,12 @@ public class UsuarioService {
 
         repository.save(novoUsuario);
 
-        return new DadosUsuarioDTO(dadosCadastro.getNome(), dadosCadastro.getEmail());
+        return new DadosUsuarioDTO(novoUsuario.getId(), novoUsuario.getNome(), novoUsuario.getEmail());
     }
 
     public Optional<DadosUsuarioDTO> retornarPorId(Long id){
         return repository.findById(id)
-                .map(usuario -> new DadosUsuarioDTO(usuario.getNome(), usuario.getEmail()));
+                .map(usuario -> new DadosUsuarioDTO(usuario.getId(), usuario.getNome(), usuario.getEmail()));
     }
 
     public List<Usuario> retornarTodos(){
@@ -54,12 +55,17 @@ public class UsuarioService {
             }
 
             Usuario atualizado = repository.save(usuario);
-            return new DadosUsuarioDTO(atualizado.getNome(), atualizado.getEmail());
+            return new DadosUsuarioDTO(atualizado.getId() ,atualizado.getNome(), atualizado.getEmail());
         });
     }
 
     public void desativarUsuario(Long id){
         repository.deleteById(id);
+    }
+
+    public Optional<DadosUsuarioDTO> login(LoginUsuarioDTO dadosLogin){
+        return repository.findByEmailAndSenha(dadosLogin.getEmail(), dadosLogin.getSenha())
+                .map(usuario -> new DadosUsuarioDTO(usuario.getId(), usuario.getNome(), usuario.getEmail()));
     }
 }
 

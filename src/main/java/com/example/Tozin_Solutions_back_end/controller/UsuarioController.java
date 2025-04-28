@@ -3,6 +3,7 @@ package com.example.Tozin_Solutions_back_end.controller;
 import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.AtualizarUsuarioDTO;
 import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.CadastrarUsuarioDTO;
 import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.DadosUsuarioDTO;
+import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.LoginUsuarioDTO;
 import com.example.Tozin_Solutions_back_end.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +45,12 @@ public class UsuarioController {
     public ResponseEntity desativar(@PathVariable Long id){
         service.desativarUsuario(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity<DadosUsuarioDTO> login(@RequestBody @Valid LoginUsuarioDTO dadosLogin){
+        return service.login(dadosLogin)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
