@@ -48,7 +48,11 @@ public class UsuarioController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<DadosUsuarioDTO> login(@RequestBody @Valid LoginUsuarioDTO dadosLogin){
+    public ResponseEntity<DadosUsuarioDTO> login(
+            @RequestParam String email,
+            @RequestParam String senha
+    ) {
+        LoginUsuarioDTO dadosLogin = new LoginUsuarioDTO(email, senha);
         return service.login(dadosLogin)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
