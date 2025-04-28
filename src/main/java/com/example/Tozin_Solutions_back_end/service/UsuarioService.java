@@ -1,13 +1,18 @@
 package com.example.Tozin_Solutions_back_end.service;
 
-import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.AtualizarUsuarioDTO;
-import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.DadosUsuarioDTO;
-import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.CadastrarUsuarioDTO;
+import com.example.Tozin_Solutions_back_end.config.GerenciadorTokenJwt;
+import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.*;
 import com.example.Tozin_Solutions_back_end.model.Usuario;
 import com.example.Tozin_Solutions_back_end.repository.UsuarioRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +22,15 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository repository;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private GerenciadorTokenJwt gerenciadorTokenJwt;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public DadosUsuarioDTO cadastrarUsuario(@Valid CadastrarUsuarioDTO dadosCadastro){
         Usuario novoUsuario = new Usuario();
@@ -60,6 +74,22 @@ public class UsuarioService {
 
     public void desativarUsuario(Long id){
         repository.deleteById(id);
+    }
+
+    public UsuarioTokenDTO autenticar(Usuario usuario){
+        final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
+                usuario.getEmail(), usuario.getSenha());
+
+        final Authentication authentication = this.authenticationManager.authenticate(credentials);
+
+        Usuario usuarioAutenticado = repository.findByEmail(usuario.getEmail())
+                .orElseThrow(() -> new ResponseStatusException(404, "Email do usuário não cadastrado", null));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        final String token = gerenciadorTokenJwt.generateToken(authentication);
+
+        return UsuarioMapper.of(usuarioAutenticado, token);
     }
 }
 
