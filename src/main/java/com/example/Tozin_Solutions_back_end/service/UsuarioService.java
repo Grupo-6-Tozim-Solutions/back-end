@@ -37,7 +37,7 @@ public class UsuarioService {
 
         novoUsuario.setNome(dadosCadastro.getNome());
         novoUsuario.setEmail(dadosCadastro.getEmail());
-        novoUsuario.setSenha(dadosCadastro.getSenha());
+        novoUsuario.setSenha(passwordEncoder.encode(dadosCadastro.getSenha()));
 
         repository.save(novoUsuario);
 

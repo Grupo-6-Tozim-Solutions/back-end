@@ -55,7 +55,6 @@ public class UsuarioController {
     }
 
     @PostMapping
-    @SecurityRequirement(name = "Bearer")
     public ResponseEntity<Void> criar(@RequestBody @Valid CadastrarUsuarioDTO cadastrarUsuarioDTO){
 
         final Usuario novoUsuario = UsuarioMapper.of(cadastrarUsuarioDTO);
