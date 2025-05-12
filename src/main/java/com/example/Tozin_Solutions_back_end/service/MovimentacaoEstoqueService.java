@@ -26,6 +26,11 @@ public class MovimentacaoEstoqueService {
         return repository.save(movimentacao);
     }
 
+    public void deletarPorPecaId(Long pecaId) {
+        repository.deleteByPecaId(pecaId);
+    }
+
+
     public List<MovimentacaoEstoque> retornarTodas(){
         return repository.findAll();
     }

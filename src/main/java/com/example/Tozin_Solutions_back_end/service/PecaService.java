@@ -5,6 +5,7 @@ import com.example.Tozin_Solutions_back_end.dto.pecaDTO.AtualizarPecaDTO;
 import com.example.Tozin_Solutions_back_end.dto.pecaDTO.CadastrarPecaDTO;
 import com.example.Tozin_Solutions_back_end.model.Peca;
 import com.example.Tozin_Solutions_back_end.repository.PecaRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -88,11 +89,17 @@ public class PecaService {
         });
     }
 
-    public Boolean deletarPeca(Long id){
-        if (repository.existsById(id)){
+    @Transactional
+    public Boolean deletarPeca(Long id) {
+        if (repository.existsById(id)) {
+            // Excluir movimentações associadas à peça
+            movimentacaoService.deletarPorPecaId(id);
+
+            // Excluir a peça
             repository.deleteById(id);
             return true;
         }
         return false;
     }
+
 }

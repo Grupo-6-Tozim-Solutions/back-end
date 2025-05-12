@@ -15,7 +15,7 @@ public class CadastrarPecaDTO {
     @Min(value = 5, message = "A quantidade minima não pode ser menor que 5!")
     private Integer quantidadeMinima;
 
-    public CadastrarPecaDTO(String nome, Integer quantidadeEstoque, Integer quantidadeMinima, Integer quantidadeAlerta) {
+    public CadastrarPecaDTO(String nome, Integer quantidadeEstoque, Integer quantidadeMinima) {
         this.nome = nome;
         this.quantidadeEstoque = quantidadeEstoque;
         this.quantidadeMinima = quantidadeMinima;
