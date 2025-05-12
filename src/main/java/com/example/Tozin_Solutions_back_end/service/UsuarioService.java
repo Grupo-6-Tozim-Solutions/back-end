@@ -41,12 +41,12 @@ public class UsuarioService {
 
         repository.save(novoUsuario);
 
-        return new DadosUsuarioDTO(dadosCadastro.getNome(), dadosCadastro.getEmail());
+        return new DadosUsuarioDTO(novoUsuario.getId(),novoUsuario.getNome(), novoUsuario.getEmail());
     }
 
     public Optional<DadosUsuarioDTO> retornarPorId(Long id){
         return repository.findById(id)
-                .map(usuario -> new DadosUsuarioDTO(usuario.getNome(), usuario.getEmail()));
+                .map(usuario -> new DadosUsuarioDTO(usuario.getId(),usuario.getNome(), usuario.getEmail()));
     }
 
     public List<Usuario> retornarTodos(){
@@ -68,7 +68,7 @@ public class UsuarioService {
             }
 
             Usuario atualizado = repository.save(usuario);
-            return new DadosUsuarioDTO(atualizado.getNome(), atualizado.getEmail());
+            return new DadosUsuarioDTO(atualizado.getId(), atualizado.getNome(), atualizado.getEmail());
         });
     }
 
