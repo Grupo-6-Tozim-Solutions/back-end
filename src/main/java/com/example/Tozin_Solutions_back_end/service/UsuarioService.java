@@ -49,8 +49,11 @@ public class UsuarioService {
                 .map(usuario -> new DadosUsuarioDTO(usuario.getId(),usuario.getNome(), usuario.getEmail()));
     }
 
-    public List<Usuario> retornarTodos(){
-        return repository.findAll();
+    public List<DadosUsuarioDTO> retornarTodos(){
+        List<Usuario> usuarios = repository.findAll();
+        List<DadosUsuarioDTO> dadosUsuarios = usuarios.stream()
+                .map(usuario -> new DadosUsuarioDTO(usuario.getId(), usuario.getNome(), usuario.getEmail())).toList();
+        return dadosUsuarios;
     }
 
     public Optional<DadosUsuarioDTO> atualizarUsuario(Long id, AtualizarUsuarioDTO dadosRecebidos) {

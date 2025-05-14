@@ -1,5 +1,6 @@
 package com.example.Tozin_Solutions_back_end.controller;
 
+import com.example.Tozin_Solutions_back_end.dto.sofaDTO.AdicaoPecaDTO;
 import com.example.Tozin_Solutions_back_end.dto.sofaDTO.AtualizarSofaDTO;
 import com.example.Tozin_Solutions_back_end.dto.sofaDTO.CadastrarSofaDTO;
 import com.example.Tozin_Solutions_back_end.model.Sofa;
@@ -7,6 +8,8 @@ import com.example.Tozin_Solutions_back_end.service.SofaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/sofa")
@@ -44,9 +47,9 @@ public class SofaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/adicionarPeca/{idSofa}/{idPeca}/{quantidade}")
-    public ResponseEntity<Sofa> adicionarPeca(@PathVariable Long idSofa, @PathVariable Long idPeca, @PathVariable Integer quantidade){
-        return service.adicionarPeca(idSofa, idPeca, quantidade)
+    @PutMapping("/adicionarPeca/{idSofa}")
+    public ResponseEntity<Sofa> adicionarPeca(@PathVariable Long idSofa, @RequestBody List<AdicaoPecaDTO> pecasAdicionadas){
+        return service.adicionarPeca(idSofa, pecasAdicionadas)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

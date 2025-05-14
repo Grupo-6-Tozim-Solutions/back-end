@@ -32,8 +32,8 @@ public class UsuarioController {
 
     @GetMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<List<Usuario>> retornarTodos(){
-        List<Usuario> usuariosEncontrados = this.service.retornarTodos();
+    public ResponseEntity<List<DadosUsuarioDTO>> retornarTodos(){
+        List<DadosUsuarioDTO> usuariosEncontrados = this.service.retornarTodos();
 
         if (usuariosEncontrados.isEmpty()){
             return ResponseEntity.status(204).build();

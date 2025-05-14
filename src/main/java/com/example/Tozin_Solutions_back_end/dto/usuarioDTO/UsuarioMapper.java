@@ -36,7 +36,7 @@ public class UsuarioMapper {
 
     //Mudar essa parte
     public static DadosUsuarioDTO of(Usuario usuario){
-        DadosUsuarioDTO dadosUsuarioDTO = new DadosUsuarioDTO(usuario.getNome(), usuario.getEmail());
+        DadosUsuarioDTO dadosUsuarioDTO = new DadosUsuarioDTO(usuario.getId(), usuario.getNome(), usuario.getEmail());
 
         return dadosUsuarioDTO;
     }

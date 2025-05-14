@@ -2,6 +2,7 @@ package com.example.Tozin_Solutions_back_end.service;
 
 import com.example.Tozin_Solutions_back_end.dto.movimentacaoEstoqueDTO.RegistrarMovimentacaoDTO;
 import com.example.Tozin_Solutions_back_end.dto.quantidadePecaEmSofaDTO.RegistroQuantidadePecaEmSofaDTO;
+import com.example.Tozin_Solutions_back_end.dto.sofaDTO.AdicaoPecaDTO;
 import com.example.Tozin_Solutions_back_end.dto.sofaDTO.AtualizarSofaDTO;
 import com.example.Tozin_Solutions_back_end.dto.sofaDTO.CadastrarSofaDTO;
 import com.example.Tozin_Solutions_back_end.model.Peca;
@@ -47,21 +48,30 @@ public class SofaService {
         return repository.findById(id);
     }
 
-    public Optional<Sofa> adicionarPeca(Long idSofa, Long idPeca, Integer quantidadePecas){
-        Optional<Peca> peca = pecaService.buscarPorId(idPeca);
+    public Optional<Sofa> adicionarPeca(Long idSofa, List<AdicaoPecaDTO> pecasAssociadas){
+        Optional<Sofa> sofaEncontrado = repository.findById(idSofa);
 
-        RegistroQuantidadePecaEmSofaDTO configuracao = new RegistroQuantidadePecaEmSofaDTO(idSofa, idPeca, quantidadePecas);
-        quantidadePecaEmSofaService.salvarConfiguracao(configuracao);
+        for(AdicaoPecaDTO pecaAssociada : pecasAssociadas){
+            Optional<Peca> peca = pecaService.buscarPorId(pecaAssociada.getIdPeca());
 
-        pecaService.removerQuantidadeEstoque(peca.get().getId(), quantidadePecas);
+            if(peca.isPresent()){
+                RegistroQuantidadePecaEmSofaDTO configuracao =
+                        new RegistroQuantidadePecaEmSofaDTO(idSofa, pecaAssociada.getIdPeca(), pecaAssociada.getQuantidade());
 
-        RegistrarMovimentacaoDTO movimentacao = new RegistrarMovimentacaoDTO(quantidadePecas, 0, peca.get());
+                quantidadePecaEmSofaService.salvarConfiguracao(configuracao);
 
-        return repository.findById(idSofa)
-                .map(sofa -> {
-                    sofa.adicionarPeca(peca.get());
-                    return repository.save(sofa);
-                });
+                pecaService.removerQuantidadeEstoque(peca.get().getId(), pecaAssociada.getQuantidade());
+
+                RegistrarMovimentacaoDTO movimentacao = new RegistrarMovimentacaoDTO(pecaAssociada.getQuantidade(), 0, peca.get());
+
+                sofaEncontrado.map(sofa -> {
+                            sofa.adicionarPeca(peca.get());
+                            return repository.save(sofa);
+                        });
+            }
+        }
+
+        return sofaEncontrado;
     }
 
     public List<Peca> listarPecaPorSofa(Long id){
