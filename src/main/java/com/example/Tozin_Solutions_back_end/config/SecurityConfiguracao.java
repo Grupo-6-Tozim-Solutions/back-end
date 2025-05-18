@@ -5,6 +5,7 @@ import jakarta.servlet.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,7 +39,7 @@ public class SecurityConfiguracao {
     private AutenticacaoService autenticacaoService;
 
     @Autowired
-    private AutenticacaoEntryPoint autenticacaoJwtEntryPoint;
+    private AutenticacaoFilter autenticacaoFilter;
 
     private static final AntPathRequestMatcher[] URLS_PERMITIDAS = {
             new AntPathRequestMatcher("/swagger-ui/**"),
@@ -70,11 +71,11 @@ public class SecurityConfiguracao {
                         .authenticated()
                 )
                 .exceptionHandling(handlign -> handlign
-                        .authenticationEntryPoint(autenticacaoJwtEntryPoint))
+                        .authenticationEntryPoint(jwtAuthenticationEntryPointBean()))
                 .sessionManagement(management -> management
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        http.addFilterBefore(jwtAuthenticationFilterBean(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(this.autenticacaoFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -91,16 +92,6 @@ public class SecurityConfiguracao {
     @Bean
     public AutenticacaoEntryPoint jwtAuthenticationEntryPointBean(){
         return new AutenticacaoEntryPoint();
-    }
-
-    @Bean
-    public AutenticacaoFilter jwtAuthenticationFilterBean(){
-        return new AutenticacaoFilter(autenticacaoService, jwtAuthenticationUtilBean());
-    }
-
-    @Bean
-    public GerenciadorTokenJwt jwtAuthenticationUtilBean(){
-        return new GerenciadorTokenJwt();
     }
 
     @Bean
