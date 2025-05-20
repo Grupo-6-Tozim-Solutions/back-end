@@ -1,99 +1,159 @@
 package com.example.Tozin_Solutions_back_end.service;
 
-import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.*;
+import com.example.Tozin_Solutions_back_end.config.GerenciadorTokenJwt;
+import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.CadastrarUsuarioDTO;
+import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.LoginUsuarioDTO;
 import com.example.Tozin_Solutions_back_end.model.Usuario;
 import com.example.Tozin_Solutions_back_end.repository.UsuarioRepository;
-import com.example.Tozin_Solutions_back_end.config.GerenciadorTokenJwt;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.Optional;
 
-@Service
-public class UsuarioService {
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-    @Autowired
-    private UsuarioRepository repository;
+public class UsuarioServiceTest {
 
-    @Autowired
+    @InjectMocks
+    private UsuarioService usuarioService;
+
+    @Mock
+    private UsuarioRepository usuarioRepository;
+
+    @Mock
     private AuthenticationManager authenticationManager;
 
-    @Autowired
+    @Mock
     private GerenciadorTokenJwt gerenciadorTokenJwt;
 
-    @Autowired
+    @Mock
     private PasswordEncoder passwordEncoder;
 
-    public DadosUsuarioDTO cadastrarUsuario(@Valid CadastrarUsuarioDTO dadosCadastro) {
-
-        // Verificar se já existe e-mail cadastrado
-        if (repository.findByEmail(dadosCadastro.getEmail()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O email inserido já é utilizado");
-        }
-
-        // Validação de email
-        String email = dadosCadastro.getEmail();
-        if (!email.contains("@")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O email inserido precisa conter um arroba (@)");
-        }
-        if (email.length() > 50) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O email não pode conter mais de 50 caracteres");
-        }
-
-        // Validação de senha
-        String senha = dadosCadastro.getSenha();
-        if (senha.length() < 4 || senha.length() > 20) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A senha deve conter entre 4 e 20 caracteres");
-        }
-
-        // Validação de confirmar senha
-        if (!senha.equals(dadosCadastro.getConfirmarSenha())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "As senhas não coincidem.");
-        }
-
-        // Validação de nome
-        String nome = dadosCadastro.getNome();
-        if (nome.length() < 3 || nome.length() > 15) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome deve conter entre 3 e 15 caracteres");
-        }
-
-        // Cadastro
-        Usuario novoUsuario = new Usuario();
-        novoUsuario.setNome(nome);
-        novoUsuario.setEmail(email);
-        novoUsuario.setSenha(passwordEncoder.encode(senha));
-
-        repository.save(novoUsuario);
-
-        return new DadosUsuarioDTO(novoUsuario.getId(), novoUsuario.getNome(), novoUsuario.getEmail());
+    @BeforeEach
+    void setup() {
+        MockitoAnnotations.openMocks(this);
     }
 
-    public UsuarioTokenDTO autenticar(Usuario usuario) {
-        try {
-            final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
-                    usuario.getEmail(), usuario.getSenha());
+    @Test
+    void deveLancarErro_QuandoEmailJaExiste() {
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("Daniel", "daniel@email.com", "senha123", "senha123");
 
-            final Authentication authentication = authenticationManager.authenticate(credentials);
+        when(usuarioRepository.findByEmail(dto.getEmail())).thenReturn(Optional.of(new Usuario()));
 
-            Usuario usuarioAutenticado = repository.findByEmail(usuario.getEmail())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nome ou senha incorretos"));
+        assertThrows(ResponseStatusException.class, () -> {
+            usuarioService.cadastrarUsuario(dto);
+        });
+    }
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            final String token = gerenciadorTokenJwt.generateToken(authentication);
+    @Test
+    void deveLancarErro_QuandoEmailNaoTemArroba() {
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", "emailemail.com", "senha123", "senha123");
+        when(usuarioRepository.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
 
-            return UsuarioMapper.of(usuarioAutenticado, token);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nome ou senha incorretos");
-        }
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
+        assertEquals("O email inserido precisa conter um arroba (@)", ex.getReason());
+    }
+
+    @Test
+    void deveLancarErro_QuandoEmailPassaDe50Caracteres() {
+        String email = "muito.longo.email.que.passa.de.cinquenta.caracteres@email.com";
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", email, "senha123", "senha123");
+        when(usuarioRepository.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
+        assertEquals("O email não pode conter mais de 50 caracteres", ex.getReason());
+    }
+
+    @Test
+    void deveCadastrarUsuario_QuandoEmailValido() {
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", "joao@email.com", "senha123", "senha123");
+        when(usuarioRepository.findByEmail(dto.getEmail())).thenReturn(Optional.of(new Usuario()));
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
+    }
+
+
+    @Test
+    void deveLancarErro_QuandoSenhaCurta() {
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", "email@email.com", "123", "123");
+        when(usuarioRepository.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
+        assertEquals("A senha não pode conter menos de 4 caracteres", ex.getReason());
+    }
+
+    @Test
+    void deveLancarErro_QuandoSenhaLonga() {
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", "email@email.com", "123456789101112131415", "123456789101112131415");
+        when(usuarioRepository.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
+        assertEquals("A senha não pode conter mais de 20 caracteres", ex.getReason());
+    }
+
+    @Test
+    void deveCadastrarUsuario_QuandoSenhaValida() {
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", "joao@email.com", "12345", "12345");
+        when(usuarioRepository.findByEmail(dto.getEmail())).thenReturn(Optional.of(new Usuario()));
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
+    }
+
+    @Test
+    void deveLancarErro_QuandoSenhasNaoCoincidem() {
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", "email@email.com", "senha123", "diferente123");
+        when(usuarioRepository.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
+        assertEquals("As senhas não coincidem", ex.getReason());
+    }
+
+    @Test
+    void deveCadastrarUsuario_QuandoSenhasCoincidem() {
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", "joao@email.com", "senha123", "senha123");
+        when(usuarioRepository.findByEmail(dto.getEmail())).thenReturn(Optional.of(new Usuario()));
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
+    }
+
+    @Test
+    void deveLancarErro_QuandoNomeMuitoCurto() {
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("Jo", "email@email.com", "senha123", "senha123");
+        when(usuarioRepository.findByEmail(dto.getNome())).thenReturn(Optional.empty());
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
+        assertEquals("O nome não pode conter menos de 3 caracteres", ex.getReason());
+    }
+
+    @Test
+    void deveLancarErro_QuandoNomeMuitoLongo() {
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João Silva dos Santos", "email@email.com", "senha123", "senha123");
+        when(usuarioRepository.findByNome(dto.getNome())).thenReturn(Optional.empty());
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
+        assertEquals("O nome não pode conter mais de 15 caracteres", ex.getReason());
+    }
+
+    @Test
+    void deveLancarErro_QuandoUsuarioNaoExisteNoLogin() {
+        LoginUsuarioDTO dto = new LoginUsuarioDTO("inexistente@email.com", "senha123");
+        when(usuarioRepository.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
+
+        Usuario usuario = new Usuario();
+        usuario.setEmail(dto.getEmail());
+        usuario.setSenha(dto.getSenha());
+
+        when(authenticationManager.authenticate(any())).thenThrow(new BadCredentialsException(""));
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.autenticar(usuario));
+        assertEquals("Email ou senha incorretos", ex.getReason());
     }
 
 

@@ -6,6 +6,7 @@ import com.example.Tozin_Solutions_back_end.model.Usuario;
 import com.example.Tozin_Solutions_back_end.repository.UsuarioRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -32,17 +34,56 @@ public class UsuarioService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public DadosUsuarioDTO cadastrarUsuario(@Valid CadastrarUsuarioDTO dadosCadastro){
-        Usuario novoUsuario = new Usuario();
+    public UsuarioService(UsuarioRepository repository, AuthenticationManager authenticationManager, GerenciadorTokenJwt gerenciadorTokenJwt, PasswordEncoder passwordEncoder) {
+        this.repository = repository;
+        this.authenticationManager = authenticationManager;
+        this.gerenciadorTokenJwt = gerenciadorTokenJwt;
+        this.passwordEncoder = passwordEncoder;
+    }
 
+    public DadosUsuarioDTO cadastrarUsuario(@Valid CadastrarUsuarioDTO dadosCadastro){
+        if (!dadosCadastro.getEmail().contains("@")){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O email inserido precisa conter um arroba (@)");
+        }
+
+        if(dadosCadastro.getEmail().length() > 50 ){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O email não pode conter mais de 50 caracteres");
+        }
+
+        if (repository.findByEmail(dadosCadastro.getEmail()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O email inserido já é utilizado");
+        }
+
+        if(dadosCadastro.getSenha().length() < 4 ) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A senha não pode conter menos de 4 caracteres");
+        }
+
+        if(dadosCadastro.getSenha().length() > 20 ) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A senha não pode conter mais de 20 caracteres");
+        }
+
+        if(!Objects.equals(dadosCadastro.getSenha(), dadosCadastro.getConfirmarSenha())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "As senhas não coincidem");
+        }
+
+        if(dadosCadastro.getNome().length() < 3) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome não pode conter menos de 3 caracteres");
+        }
+
+        if(dadosCadastro.getNome().length() > 15) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome não pode conter mais de 15 caracteres");
+        }
+
+        Usuario novoUsuario = new Usuario();
         novoUsuario.setNome(dadosCadastro.getNome());
         novoUsuario.setEmail(dadosCadastro.getEmail());
         novoUsuario.setSenha(passwordEncoder.encode(dadosCadastro.getSenha()));
 
         repository.save(novoUsuario);
 
-        return new DadosUsuarioDTO(novoUsuario.getId(),novoUsuario.getNome(), novoUsuario.getEmail());
+        return new DadosUsuarioDTO(novoUsuario.getId(), novoUsuario.getNome(), novoUsuario.getEmail());
     }
+
 
     public Optional<DadosUsuarioDTO> retornarPorId(Long id){
         return repository.findById(id)
@@ -80,13 +121,14 @@ public class UsuarioService {
     }
 
     public UsuarioTokenDTO autenticar(Usuario usuario){
+
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
                 usuario.getEmail(), usuario.getSenha());
 
         final Authentication authentication = this.authenticationManager.authenticate(credentials);
 
         Usuario usuarioAutenticado = repository.findByEmail(usuario.getEmail())
-                .orElseThrow(() -> new ResponseStatusException(404, "Email do usuário não cadastrado", null));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email ou senha incorretos"));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
