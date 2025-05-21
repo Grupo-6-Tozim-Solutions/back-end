@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -128,7 +129,10 @@ public class UsuarioService {
         final Authentication authentication = this.authenticationManager.authenticate(credentials);
 
         Usuario usuarioAutenticado = repository.findByEmail(usuario.getEmail())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email ou senha incorretos"));
+                .orElseThrow(() -> new BadCredentialsException("Email ou senha incorretos"));
+        if (!usuarioAutenticado.getSenha().equals(usuario.getSenha())) {
+            throw new BadCredentialsException("Email ou senha incorretos");
+        }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 

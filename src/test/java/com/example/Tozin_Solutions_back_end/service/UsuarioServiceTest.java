@@ -150,11 +150,28 @@ public class UsuarioServiceTest {
         usuario.setEmail(dto.getEmail());
         usuario.setSenha(dto.getSenha());
 
-        when(authenticationManager.authenticate(any())).thenThrow(new BadCredentialsException(""));
+        when(authenticationManager.authenticate(any())).thenThrow(new BadCredentialsException("Email ou senha incorretos"));
 
-        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.autenticar(usuario));
-        assertEquals("Email ou senha incorretos", ex.getReason());
+        BadCredentialsException ex = assertThrows(BadCredentialsException.class, () -> usuarioService.autenticar(usuario));
+        assertEquals("Email ou senha incorretos", ex.getMessage());
     }
 
+    @Test
+    void deveLancarErro_QuandoSenhaIncorretaNoLogin() {
 
+        CadastrarUsuarioDTO dtoC = new CadastrarUsuarioDTO("João", "email@email.com", "senha123", "senha123");
+        when(usuarioRepository.findByNome(dtoC.getNome())).thenReturn(Optional.empty());
+
+        LoginUsuarioDTO dtoL = new LoginUsuarioDTO("email@email.com", "senha132");
+        when(usuarioRepository.findByEmail(dtoL.getEmail())).thenReturn(Optional.empty());
+
+        Usuario usuario = new Usuario();
+        usuario.setEmail(dtoL.getEmail());
+        usuario.setSenha(dtoL.getSenha());
+
+        when(authenticationManager.authenticate(any())).thenThrow(new BadCredentialsException("Email ou senha incorretos"));
+
+        BadCredentialsException ex = assertThrows(BadCredentialsException.class, () -> usuarioService.autenticar(usuario));
+        assertEquals("Email ou senha incorretos", ex.getMessage());
+    }
 }
