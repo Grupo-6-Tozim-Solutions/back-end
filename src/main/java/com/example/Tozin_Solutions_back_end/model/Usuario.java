@@ -14,6 +14,7 @@ public class Usuario {
     private String email;
     private String senha;
 
+
     public Usuario() {
     }
 
@@ -22,6 +23,7 @@ public class Usuario {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
+
     }
 
     public Long getId() {
@@ -55,4 +57,8 @@ public class Usuario {
     public void setSenha(String senha) {
         this.senha = senha;
     }
+
+
+
+
 }

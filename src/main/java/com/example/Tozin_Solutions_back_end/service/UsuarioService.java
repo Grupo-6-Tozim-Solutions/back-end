@@ -63,9 +63,7 @@ public class UsuarioService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A senha não pode conter mais de 20 caracteres");
         }
 
-        if(!Objects.equals(dadosCadastro.getSenha(), dadosCadastro.getConfirmarSenha())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "As senhas não coincidem");
-        }
+
 
         if(dadosCadastro.getNome().length() < 3) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome não pode conter menos de 3 caracteres");

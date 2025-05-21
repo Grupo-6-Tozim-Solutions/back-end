@@ -15,14 +15,12 @@ public class CadastrarUsuarioDTO {
     @NotBlank(message = "Senha não pode ser vazia!")
     private String senha;
 
-    @NotBlank(message = "Confirmar Senha não pode ser vazio!")
-    private String confirmarSenha;
 
-    public CadastrarUsuarioDTO(String nome, String email, String senha, String confirmarSenha) {
+    public CadastrarUsuarioDTO(String nome, String email, String senha) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
-        this.confirmarSenha = confirmarSenha;
+
     }
 
     public String getNome() {
@@ -37,6 +35,7 @@ public class CadastrarUsuarioDTO {
         return senha;
     }
 
-    public String getConfirmarSenha() { return confirmarSenha; }
+
 
 }
+

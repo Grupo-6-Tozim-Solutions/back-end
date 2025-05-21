@@ -44,7 +44,7 @@ public class UsuarioServiceTest {
 
     @Test
     void deveLancarErro_QuandoEmailJaExiste() {
-        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("Daniel", "daniel@email.com", "senha123");
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("Daniel", "daniel@email.com", "senha123",);
 
         when(usuarioRepository.findByEmail(dto.getEmail())).thenReturn(Optional.of(new Usuario()));
 
@@ -55,7 +55,7 @@ public class UsuarioServiceTest {
 
     @Test
     void deveLancarErro_QuandoEmailNaoTemArroba() {
-        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", "emailemail.com", "senha123");
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", "emailemail.com", "senha123", "senha123");
         when(usuarioRepository.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
@@ -65,7 +65,7 @@ public class UsuarioServiceTest {
     @Test
     void deveLancarErro_QuandoEmailPassaDe50Caracteres() {
         String email = "muito.longo.email.que.passa.de.cinquenta.caracteres@email.com";
-        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", email, "senha123");
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", email, "senha123", "senha123");
         when(usuarioRepository.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
@@ -74,7 +74,7 @@ public class UsuarioServiceTest {
 
     @Test
     void deveCadastrarUsuario_QuandoEmailValido() {
-        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", "joao@email.com", "senha123");
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", "joao@email.com", "senha123", "senha123");
         when(usuarioRepository.findByEmail(dto.getEmail())).thenReturn(Optional.of(new Usuario()));
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
@@ -83,7 +83,7 @@ public class UsuarioServiceTest {
 
     @Test
     void deveLancarErro_QuandoSenhaCurta() {
-        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", "email@email.com", "123");
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", "email@email.com", "123", "123");
         when(usuarioRepository.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
@@ -92,7 +92,7 @@ public class UsuarioServiceTest {
 
     @Test
     void deveLancarErro_QuandoSenhaLonga() {
-        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", "email@email.com", "123456789101112131415");
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", "email@email.com", "123456789101112131415", "123456789101112131415");
         when(usuarioRepository.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
@@ -101,14 +101,31 @@ public class UsuarioServiceTest {
 
     @Test
     void deveCadastrarUsuario_QuandoSenhaValida() {
-        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", "joao@email.com", "12345");
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", "joao@email.com", "12345", "12345");
         when(usuarioRepository.findByEmail(dto.getEmail())).thenReturn(Optional.of(new Usuario()));
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
     }
 
     @Test
+    void deveLancarErro_QuandoSenhasNaoCoincidem() {
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", "email@email.com", "senha123", "diferente123");
+        when(usuarioRepository.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
+        assertEquals("As senhas não coincidem", ex.getReason());
+    }
+
+    @Test
+    void deveCadastrarUsuario_QuandoSenhasCoincidem() {
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João", "joao@email.com", "senha123", "senha123");
+        when(usuarioRepository.findByEmail(dto.getEmail())).thenReturn(Optional.of(new Usuario()));
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
+    }
+
+    @Test
     void deveLancarErro_QuandoNomeMuitoCurto() {
-        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("Jo", "email@email.com", "senha123");
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("Jo", "email@email.com", "senha123", "senha123");
         when(usuarioRepository.findByEmail(dto.getNome())).thenReturn(Optional.empty());
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
@@ -117,7 +134,7 @@ public class UsuarioServiceTest {
 
     @Test
     void deveLancarErro_QuandoNomeMuitoLongo() {
-        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João Silva dos Santos", "email@email.com", "senha123");
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("João Silva dos Santos", "email@email.com", "senha123", "senha123");
         when(usuarioRepository.findByNome(dto.getNome())).thenReturn(Optional.empty());
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
@@ -142,7 +159,7 @@ public class UsuarioServiceTest {
     @Test
     void deveLancarErro_QuandoSenhaIncorretaNoLogin() {
 
-        CadastrarUsuarioDTO dtoC = new CadastrarUsuarioDTO("João", "email@email.com", "senha123");
+        CadastrarUsuarioDTO dtoC = new CadastrarUsuarioDTO("João", "email@email.com", "senha123", "senha123");
         when(usuarioRepository.findByNome(dtoC.getNome())).thenReturn(Optional.empty());
 
         LoginUsuarioDTO dtoL = new LoginUsuarioDTO("email@email.com", "senha132");

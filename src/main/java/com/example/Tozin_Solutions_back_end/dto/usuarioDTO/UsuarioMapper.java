@@ -11,6 +11,7 @@ public class UsuarioMapper {
         usuario.setEmail(cadastrarUsuario.getEmail());
         usuario.setSenha(cadastrarUsuario.getSenha());
 
+
         return usuario;
     }
 
