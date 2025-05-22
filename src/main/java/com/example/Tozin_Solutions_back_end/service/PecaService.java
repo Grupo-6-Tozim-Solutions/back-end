@@ -8,13 +8,17 @@ import com.example.Tozin_Solutions_back_end.repository.PecaRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PecaService {
+public class
+PecaService {
 
     @Autowired
     private PecaRepository repository;
@@ -24,6 +28,10 @@ public class PecaService {
 
     public Peca salvarPeca(@Valid CadastrarPecaDTO dadosNovaPeca){
         Peca novaPeca = new Peca();
+
+        if(novaPeca.getNome().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A peça deve ter um nome");
+        }
 
         novaPeca.setNome(dadosNovaPeca.getNome());
         novaPeca.setQuantidadeEstoque(dadosNovaPeca.getQuantidadeEstoque());
