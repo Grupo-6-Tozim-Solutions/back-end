@@ -29,13 +29,22 @@ PecaService {
     public Peca salvarPeca(@Valid CadastrarPecaDTO dadosNovaPeca){
         Peca novaPeca = new Peca();
 
-        if(novaPeca.getNome().isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A peça deve ter um nome");
-        }
-
         novaPeca.setNome(dadosNovaPeca.getNome());
         novaPeca.setQuantidadeEstoque(dadosNovaPeca.getQuantidadeEstoque());
         novaPeca.setQuantidadeMinima(dadosNovaPeca.getQuantidadeMinima());
+
+        if(novaPeca.getNome().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A peça deve ter um nome");
+        }
+        if(novaPeca.getNome().length() > 25) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome da peça não pode ter mais de 25 caracteres");
+        }
+        if(novaPeca.getNome().length() < 3) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome da peça não pode ter menos de 3 caracteres");
+        }
+        if(repository.existsByNomeIgnoreCase(novaPeca.getNome())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Já existe uma peça com esse nome");
+        }
 
         repository.save(novaPeca);
 
@@ -85,8 +94,21 @@ PecaService {
 
     public Optional<Peca> atualizarPeca(Long id,@Valid AtualizarPecaDTO novosDados){
         return repository.findById(id).map(peca -> {
-            if(novosDados.getNome() != null && !novosDados.getNome().isEmpty()){
-                peca.setNome(novosDados.getNome());
+            if(novosDados.getNome() != null) {
+                String nome = novosDados.getNome();
+                if(nome.isBlank()) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome da peça não pode estar vazio");
+                }
+                if(nome.length() > 25) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome da peça não pode ter mais de 25 caracteres");
+                }
+                if(nome.length() < 3) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome da peça não pode ter menos de 3 caracteres");
+                }
+                if(repository.existsByNomeIgnoreCase(nome) && !peca.getNome().equalsIgnoreCase(nome)) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Já existe uma peça com esse nome");
+                }
+                peca.setNome(nome);
             }
 
             if (novosDados.getQuantidadeMinima() != null){
