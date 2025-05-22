@@ -39,8 +39,8 @@ public class AutenticacaoFilter extends OncePerRequestFilter {
         String username = null;
         String jwtToken = null;
 
-        String requestTokenHeader = request.getHeader("Authorization");
 
+        String requestTokenHeader = request.getHeader("Authorization");
         if(Objects.nonNull(requestTokenHeader) && requestTokenHeader.startsWith("Bearer ")){
             jwtToken = requestTokenHeader.substring(7);
 
