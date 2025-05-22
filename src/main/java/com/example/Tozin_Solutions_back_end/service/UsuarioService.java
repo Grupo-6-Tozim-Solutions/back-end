@@ -127,10 +127,10 @@ public class UsuarioService {
         final Authentication authentication = this.authenticationManager.authenticate(credentials);
 
         Usuario usuarioAutenticado = repository.findByEmail(usuario.getEmail())
-                .orElseThrow(() -> new BadCredentialsException("Email ou senha incorretos"));
-        if (!usuarioAutenticado.getSenha().equals(usuario.getSenha())) {
-            throw new BadCredentialsException("Email ou senha incorretos");
-        }
+                .orElseThrow(() -> new BadCredentialsException("Email não encontrado"));
+//        if (!usuarioAutenticado.getSenha().equals(passwordEncoder.encode(usuario.getSenha()))) {
+//            throw new BadCredentialsException("Email ou senha incorretos");
+//        }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
