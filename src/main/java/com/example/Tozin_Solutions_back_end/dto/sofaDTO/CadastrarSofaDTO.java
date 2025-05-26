@@ -1,23 +1,20 @@
 package com.example.Tozin_Solutions_back_end.dto.sofaDTO;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 
 public class CadastrarSofaDTO {
     @NotBlank(message = "Modelo não pode ser vazio!")
     private String modelo;
 
-    @NotBlank(message = "Descrição não pode ser vazia!")
-    private String descricao;
+    public CadastrarSofaDTO() {}
 
-    public CadastrarSofaDTO(String modelo, String descricao) {
+    @JsonCreator
+    public CadastrarSofaDTO(@JsonProperty("modelo") String modelo) {
         this.modelo = modelo;
-        this.descricao = descricao;
     }
 
     public String getModelo() {
         return modelo;
-    }
-
-    public String getDescricao() {
-        return descricao;
     }
 }

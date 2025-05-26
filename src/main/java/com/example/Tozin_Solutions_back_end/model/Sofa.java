@@ -14,11 +14,11 @@ public class Sofa {
     private Long id;
 
     private String modelo;
-    private String descricao;
     private LocalDateTime dataCadastro = LocalDateTime.now();
 
-    @OneToMany
-    private List<Peca> pecas = new ArrayList<>();
+
+    private String caminhoImagem;
+
 
     public Sofa() {
     }
@@ -39,27 +39,17 @@ public class Sofa {
         this.modelo = modelo;
     }
 
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
     public LocalDateTime getDataCadastro() {
         return dataCadastro;
     }
 
-    public List<Peca> getPecas() {
-        return pecas;
+    public String getCaminhoImagem() {
+        return caminhoImagem;
     }
 
-    public void adicionarPeca(Peca novaPeca){
-        pecas.add(novaPeca);
+    public void setCaminhoImagem(String caminhoImagem) {
+        this.caminhoImagem = caminhoImagem;
     }
 
-    public void removerPeca(Peca peca) {
-        pecas.remove(peca);
-    }
+
 }

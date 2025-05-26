@@ -5,9 +5,13 @@ import com.example.Tozin_Solutions_back_end.dto.sofaDTO.AtualizarSofaDTO;
 import com.example.Tozin_Solutions_back_end.dto.sofaDTO.CadastrarSofaDTO;
 import com.example.Tozin_Solutions_back_end.model.Sofa;
 import com.example.Tozin_Solutions_back_end.service.SofaService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,9 +22,20 @@ public class SofaController {
     @Autowired
     private SofaService service;
 
-    @PostMapping
-    public ResponseEntity cadastrarSofa(@RequestBody CadastrarSofaDTO dadosCadastroSofa){
-        return ResponseEntity.ok(service.salvarSofa(dadosCadastroSofa));
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Sofa> cadastrarSofaComImagem(
+            @RequestPart("sofa") String dadosSofaJson,
+            @RequestPart("imagem") MultipartFile imagem) throws JsonProcessingException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        CadastrarSofaDTO sofa = objectMapper.readValue(dadosSofaJson, CadastrarSofaDTO.class);
+
+        if (imagem.isEmpty()) {
+            return ResponseEntity.badRequest().build(); // ou lançar uma exceção personalizada
+        }
+
+        Sofa sofaSalvo = service.salvarSofaComImagem(sofa, imagem);
+        return ResponseEntity.ok(sofaSalvo);
     }
 
     @GetMapping

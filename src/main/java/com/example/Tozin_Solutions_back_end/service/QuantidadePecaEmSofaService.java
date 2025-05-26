@@ -6,6 +6,7 @@ import com.example.Tozin_Solutions_back_end.repository.QuantidadePecaEmSofaRepos
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,15 +17,23 @@ public class QuantidadePecaEmSofaService {
 
     public QuantidadePecaEmSofa salvarConfiguracao(RegistroQuantidadePecaEmSofaDTO dados){
         QuantidadePecaEmSofa quantidadePecaEmSofa = new QuantidadePecaEmSofa();
-
         quantidadePecaEmSofa.setIdSofa(dados.getIdSofa());
         quantidadePecaEmSofa.setIdPeca(dados.getIdPeca());
         quantidadePecaEmSofa.setQuantidadePeca(dados.getQuantidade());
-
         return repository.save(quantidadePecaEmSofa);
     }
 
-    public Optional<QuantidadePecaEmSofa> encontrarPorIdSofaEPeca(Long idSofa, Long idPeca){
+    // Para listar todas as peças de um sofá
+    public List<QuantidadePecaEmSofa> listarPorIdSofa(Long idSofa) {
+        return repository.findAllByIdSofa(idSofa);
+    }
+
+    // Para buscar uma configuração específica
+    public Optional<QuantidadePecaEmSofa> encontrarPorIdSofaEPeca(Long idSofa, Long idPeca) {
         return repository.findByIdSofaAndIdPeca(idSofa, idPeca);
+    }
+
+    public void removerConfiguracao(Long id) {
+        repository.deleteById(id);
     }
 }
