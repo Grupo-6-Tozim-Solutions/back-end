@@ -1,6 +1,7 @@
 package com.example.Tozin_Solutions_back_end.service;
 
 import com.example.Tozin_Solutions_back_end.dto.movimentacaoEstoqueDTO.RegistrarMovimentacaoDTO;
+import com.example.Tozin_Solutions_back_end.dto.quantidadePecaEmSofaDTO.PecaComQuantidadeDTO;
 import com.example.Tozin_Solutions_back_end.dto.quantidadePecaEmSofaDTO.RegistroQuantidadePecaEmSofaDTO;
 import com.example.Tozin_Solutions_back_end.dto.sofaDTO.AdicaoPecaDTO;
 import com.example.Tozin_Solutions_back_end.dto.sofaDTO.AtualizarSofaDTO;
@@ -82,31 +83,41 @@ public class SofaService {
             Optional<Peca> peca = pecaService.buscarPorId(pecaAssociada.getIdPeca());
             Optional<QuantidadePecaEmSofa> jaExiste = quantidadePecaEmSofaService.encontrarPorIdSofaEPeca(idSofa, pecaAssociada.getIdPeca());
 
-            if (peca.isPresent() && jaExiste.isEmpty()) {
-                RegistroQuantidadePecaEmSofaDTO configuracao =
-                        new RegistroQuantidadePecaEmSofaDTO(idSofa, pecaAssociada.getIdPeca(), pecaAssociada.getQuantidade());
-
-                quantidadePecaEmSofaService.salvarConfiguracao(configuracao);
-
-                pecaService.removerQuantidadeEstoque(peca.get().getId(), pecaAssociada.getQuantidade());
-
-                RegistrarMovimentacaoDTO movimentacao = new RegistrarMovimentacaoDTO(pecaAssociada.getQuantidade(), 0, peca.get());
-                // Se quiser registrar movimentação, chame o serviço aqui
-                // movimentacaoService.registrarMovimentacao(movimentacao);
+            if (peca.isPresent()) {
+                // Se a peça já existe, apenas atualiza a quantidade
+                if (jaExiste.isPresent()) {
+                    RegistroQuantidadePecaEmSofaDTO configuracao =
+                            new RegistroQuantidadePecaEmSofaDTO(idSofa, pecaAssociada.getIdPeca(), pecaAssociada.getQuantidade());
+                    quantidadePecaEmSofaService.salvarConfiguracao(configuracao);
+                } else {
+                    // Se não existe, cria uma nova relação
+                    RegistroQuantidadePecaEmSofaDTO configuracao =
+                            new RegistroQuantidadePecaEmSofaDTO(idSofa, pecaAssociada.getIdPeca(), pecaAssociada.getQuantidade());
+                    quantidadePecaEmSofaService.salvarConfiguracao(configuracao);
+                }
             }
         }
 
         return sofaEncontrado;
     }
 
-    // Agora retorna as peças associadas ao sofá via QuantidadePecaEmSofa
-    public List<Peca> listarPecaPorSofa(Long idSofa) {
+    public List<PecaComQuantidadeDTO> listarPecaPorSofa(Long idSofa) {
         List<QuantidadePecaEmSofa> relacoes = quantidadePecaEmSofaService.listarPorIdSofa(idSofa);
-        List<Peca> pecas = new ArrayList<>();
+        List<PecaComQuantidadeDTO> pecasComQuantidade = new ArrayList<>();
+
         for (QuantidadePecaEmSofa relacao : relacoes) {
-            pecaService.buscarPorId(relacao.getIdPeca()).ifPresent(pecas::add);
+            Optional<Peca> pecaOptional = pecaService.buscarPorId(relacao.getIdPeca());
+            if (pecaOptional.isPresent()) {
+                Peca peca = pecaOptional.get();
+                // Adiciona a quantidade que está sendo utilizada no sofá
+                pecasComQuantidade.add(new PecaComQuantidadeDTO(
+                        peca.getId(),
+                        peca.getNome(),
+                        relacao.getQuantidadePeca() // A quantidade associada ao sofá
+                ));
+            }
         }
-        return pecas;
+        return pecasComQuantidade;
     }
 
     public Optional<Sofa> removerPeca(Long idSofa, Long idPeca) {
