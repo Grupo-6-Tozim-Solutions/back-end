@@ -11,4 +11,7 @@ public interface QuantidadePecaEmSofaRepository extends JpaRepository<Quantidade
     Optional<QuantidadePecaEmSofa> findByIdSofaAndIdPeca(Long idSofa, Long idPeca);
 
     List<QuantidadePecaEmSofa> findAllByIdSofa(Long idSofa);
+
+    void deleteAllByIdSofa(Long idSofa);
+
 }

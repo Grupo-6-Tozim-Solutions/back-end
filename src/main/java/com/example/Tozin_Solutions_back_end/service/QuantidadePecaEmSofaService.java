@@ -47,4 +47,9 @@ public class QuantidadePecaEmSofaService {
     public void removerConfiguracao(Long id) {
         repository.deleteById(id);
     }
+
+    @Transactional
+    public void removerTodasPorSofaId(Long idSofa) {
+        repository.deleteAllByIdSofa(idSofa);
+    }
 }
