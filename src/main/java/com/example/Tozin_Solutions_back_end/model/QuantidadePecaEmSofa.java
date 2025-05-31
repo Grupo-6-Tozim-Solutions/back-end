@@ -1,11 +1,11 @@
 package com.example.Tozin_Solutions_back_end.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"idSofa", "idPeca"})
+})
 public class QuantidadePecaEmSofa {
 
     @Id
@@ -17,6 +17,10 @@ public class QuantidadePecaEmSofa {
     private Integer quantidadePeca;
 
     public QuantidadePecaEmSofa() {
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Long getIdSofa() {

@@ -55,12 +55,20 @@ public class SofaController {
         return ResponseEntity.ok(service.listarPecaPorSofa(id));
     }
 
-    @PutMapping
-    public ResponseEntity<Sofa> atualizarSofa(@PathVariable Long id, @RequestBody AtualizarSofaDTO dadosSofa){
-        return service.atualizarDadosSofa(id, dadosSofa)
+    @PutMapping(value = "/atualizar/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Sofa> atualizarModeloEImagem(
+            @PathVariable Long id,
+            @RequestPart("sofa") String dadosSofaJson,
+            @RequestPart(value = "imagem", required = false) MultipartFile novaImagem) throws JsonProcessingException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        AtualizarSofaDTO novosDados = objectMapper.readValue(dadosSofaJson, AtualizarSofaDTO.class);
+
+        return service.atualizarModeloEImagem(id, novosDados, novaImagem)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
 
     @PutMapping("/adicionarPeca/{idSofa}")
     public ResponseEntity<Sofa> adicionarPeca(@PathVariable Long idSofa, @RequestBody List<AdicaoPecaDTO> pecasAdicionadas){
@@ -69,11 +77,19 @@ public class SofaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/removerPeca/{idSofa}/{idPeca}")
-    public ResponseEntity<Sofa> removerPeca(@PathVariable Long idSofa, @PathVariable Long idPeca){
-        return service.removerPeca(idSofa, idPeca)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
 
+    @DeleteMapping("/removerPeca/{idSofa}/{idPeca}")
+    public ResponseEntity<?> removerPeca(
+            @PathVariable Long idSofa,
+            @PathVariable Long idPeca) {
+
+        try {
+            return service.removerPeca(idSofa, idPeca)
+                    .map(sofa -> ResponseEntity.ok().body(sofa))
+                    .orElse(ResponseEntity.notFound().build());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body("Erro ao remover peça do sofá: " + e.getMessage());
+        }
+    }
 }
