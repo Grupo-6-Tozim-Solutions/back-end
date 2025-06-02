@@ -1,20 +1,23 @@
 package com.example.Tozin_Solutions_back_end.dto.sofaDTO;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class AtualizarSofaDTO {
     private String modelo;
 
-    private String descricao;
-
-    public AtualizarSofaDTO(String modelo, String descricao) {
+    @JsonCreator
+    public AtualizarSofaDTO(@JsonProperty("modelo") String modelo) {
         this.modelo = modelo;
-        this.descricao = descricao;
     }
+
+    public AtualizarSofaDTO() {}
 
     public String getModelo() {
         return modelo;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public void setModelo(String modelo) {
+        this.modelo = modelo;
     }
 }

@@ -10,6 +10,7 @@ import com.example.Tozin_Solutions_back_end.model.Peca;
 import com.example.Tozin_Solutions_back_end.model.QuantidadePecaEmSofa;
 import com.example.Tozin_Solutions_back_end.model.Sofa;
 import com.example.Tozin_Solutions_back_end.repository.SofaRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,28 +80,30 @@ public class SofaService {
     public Optional<Sofa> adicionarPeca(Long idSofa, List<AdicaoPecaDTO> pecasAssociadas) {
         Optional<Sofa> sofaEncontrado = repository.findById(idSofa);
 
+        if (sofaEncontrado.isEmpty()) {
+            return Optional.empty();
+        }
+
         for (AdicaoPecaDTO pecaAssociada : pecasAssociadas) {
             Optional<Peca> peca = pecaService.buscarPorId(pecaAssociada.getIdPeca());
-            Optional<QuantidadePecaEmSofa> jaExiste = quantidadePecaEmSofaService.encontrarPorIdSofaEPeca(idSofa, pecaAssociada.getIdPeca());
 
-            if (peca.isPresent()) {
-                // Se a peça já existe, apenas atualiza a quantidade
-                if (jaExiste.isPresent()) {
-                    RegistroQuantidadePecaEmSofaDTO configuracao =
-                            new RegistroQuantidadePecaEmSofaDTO(idSofa, pecaAssociada.getIdPeca(), pecaAssociada.getQuantidade());
-                    quantidadePecaEmSofaService.salvarConfiguracao(configuracao);
-                } else {
-                    // Se não existe, cria uma nova relação
-                    RegistroQuantidadePecaEmSofaDTO configuracao =
-                            new RegistroQuantidadePecaEmSofaDTO(idSofa, pecaAssociada.getIdPeca(), pecaAssociada.getQuantidade());
-                    quantidadePecaEmSofaService.salvarConfiguracao(configuracao);
-                }
+            if (peca.isEmpty()) {
+                continue; // ou lançar exceção se preferir
             }
+
+            // Esta verificação agora é redundante pois o salvarConfiguracao já faz isso
+            RegistroQuantidadePecaEmSofaDTO configuracao =
+                    new RegistroQuantidadePecaEmSofaDTO(
+                            idSofa,
+                            pecaAssociada.getIdPeca(),
+                            pecaAssociada.getQuantidade()
+                    );
+
+            quantidadePecaEmSofaService.salvarConfiguracao(configuracao);
         }
 
         return sofaEncontrado;
     }
-
     public List<PecaComQuantidadeDTO> listarPecaPorSofa(Long idSofa) {
         List<QuantidadePecaEmSofa> relacoes = quantidadePecaEmSofaService.listarPorIdSofa(idSofa);
         List<PecaComQuantidadeDTO> pecasComQuantidade = new ArrayList<>();
@@ -120,25 +123,53 @@ public class SofaService {
         return pecasComQuantidade;
     }
 
+    @Transactional
     public Optional<Sofa> removerPeca(Long idSofa, Long idPeca) {
+        // Verifica se o sofá existe primeiro
+        Optional<Sofa> sofa = repository.findById(idSofa);
+        if (sofa.isEmpty()) {
+            return Optional.empty();
+        }
+
         Optional<Peca> peca = pecaService.buscarPorId(idPeca);
         Optional<QuantidadePecaEmSofa> configuracao = quantidadePecaEmSofaService.encontrarPorIdSofaEPeca(idSofa, idPeca);
 
         if (peca.isPresent() && configuracao.isPresent()) {
+            // Devolve a quantidade ao estoque
             pecaService.adicionarQuantidadeEstoque(peca.get().getId(), configuracao.get().getQuantidadePeca());
-            quantidadePecaEmSofaService.removerConfiguracao(configuracao.get().getIdPeca());
+
+            // Remove a configuração usando o ID correto (da relação, não da peça)
+            quantidadePecaEmSofaService.removerConfiguracao(configuracao.get().getId());
         }
 
         return repository.findById(idSofa);
     }
 
-    public Optional<Sofa> atualizarDadosSofa(Long id, AtualizarSofaDTO novosDados) {
+    public Optional<Sofa> atualizarModeloEImagem(Long id, AtualizarSofaDTO novosDados, MultipartFile novaImagem) {
         return repository.findById(id)
                 .map(sofa -> {
-                    if (sofa.getModelo() != null && !novosDados.getModelo().isEmpty()) {
+                    if (novosDados.getModelo() != null && !novosDados.getModelo().isEmpty()) {
                         sofa.setModelo(novosDados.getModelo());
                     }
+
+                    if (novaImagem != null && !novaImagem.isEmpty()) {
+                        String pastaDestino = "uploads/sofas/";
+                        File pasta = new File(pastaDestino);
+                        if (!pasta.exists()) {
+                            pasta.mkdirs();
+                        }
+                        try {
+                            String nomeImagem = System.currentTimeMillis() + "_" + novaImagem.getOriginalFilename();
+                            Path caminhoArquivo = Paths.get(pastaDestino + nomeImagem);
+                            Files.write(caminhoArquivo, novaImagem.getBytes());
+                            sofa.setCaminhoImagem("/" + pastaDestino + nomeImagem);
+                        } catch (IOException e) {
+                            throw new RuntimeException("Erro ao salvar imagem", e);
+                        }
+                    }
+
                     return repository.save(sofa);
                 });
     }
+
 }
