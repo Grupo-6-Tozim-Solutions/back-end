@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -31,9 +32,14 @@ public class MovimentacaoEstoqueService {
     }
 
 
+    public List<Map<String, Object>> getPecasMaisSaidaMes() {
+        return repository.findPecasMaisSaidaMes();
+    }
+
     public List<MovimentacaoEstoque> retornarTodas(){
         return repository.findAll();
     }
+
 
     public Optional<MovimentacaoEstoque> retornarPorId(Long id){
         return repository.findById(id);

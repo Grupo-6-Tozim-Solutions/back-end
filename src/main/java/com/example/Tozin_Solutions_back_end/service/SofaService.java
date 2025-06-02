@@ -7,8 +7,11 @@ import com.example.Tozin_Solutions_back_end.dto.sofaDTO.AdicaoPecaDTO;
 import com.example.Tozin_Solutions_back_end.dto.sofaDTO.AtualizarSofaDTO;
 import com.example.Tozin_Solutions_back_end.dto.sofaDTO.CadastrarSofaDTO;
 import com.example.Tozin_Solutions_back_end.model.Peca;
+import com.example.Tozin_Solutions_back_end.model.ProducaoSofa;
 import com.example.Tozin_Solutions_back_end.model.QuantidadePecaEmSofa;
 import com.example.Tozin_Solutions_back_end.model.Sofa;
+import com.example.Tozin_Solutions_back_end.model.projection.ProducaoMensal;
+import com.example.Tozin_Solutions_back_end.repository.ProducaoSofaRepository;
 import com.example.Tozin_Solutions_back_end.repository.SofaRepository;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
@@ -26,9 +29,14 @@ import java.nio.file.Paths;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 @Service
 public class SofaService {
 
@@ -37,6 +45,9 @@ public class SofaService {
 
     @Autowired
     private PecaService pecaService;
+
+    @Autowired
+    private ProducaoSofaRepository producaoSofaRepository;
 
     @Autowired
     private MovimentacaoEstoqueService movimentacaoService;
@@ -175,6 +186,7 @@ public class SofaService {
 
     @Transactional
     public void produzirSofa(Long idSofa, Integer quantidadeSofas) {
+        producaoSofaRepository.save(new ProducaoSofa(idSofa, LocalDateTime.now(), quantidadeSofas));
         List<PecaComQuantidadeDTO> pecas = listarPecaPorSofa(idSofa);
         for (PecaComQuantidadeDTO peca : pecas) {
             // Remove do estoque a quantidade necessária para todos os sofás produzidos
@@ -183,6 +195,27 @@ public class SofaService {
                     peca.getQuantidade() * quantidadeSofas
             );
         }
+    }
+
+    public Map<Integer, Integer> getProducaoMensalAnoAtual() {
+        // Obtém os dados do banco
+        List<ProducaoMensal> producaoPorMes = producaoSofaRepository.findProducaoAgrupadaPorMesAnoAtual();
+        // Cria um mapa com todos os meses (1-12) inicializados com 0
+        Map<Integer, Integer> resultado = IntStream.rangeClosed(1, 12)
+                .boxed()
+                .collect(Collectors.toMap(
+                        mes -> mes,
+                        mes -> 0
+                ));
+        // Atualiza o mapa com os valores do banco de dados
+        producaoPorMes.forEach(item ->
+                resultado.put(item.getMes(), item.getTotal())
+        );
+        return resultado;
+    }
+
+    public List<Map<String, Object>> getSofasMaisSaidaMes() {
+        return producaoSofaRepository.findSofasMaisSaidaMes();
     }
 
     @Transactional
