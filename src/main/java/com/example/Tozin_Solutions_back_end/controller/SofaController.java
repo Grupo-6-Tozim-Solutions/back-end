@@ -22,6 +22,7 @@ public class SofaController {
     @Autowired
     private SofaService service;
 
+
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Sofa> cadastrarSofaComImagem(
             @RequestPart("sofa") String dadosSofaJson,
@@ -77,6 +78,12 @@ public class SofaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PostMapping("/produzir/{idSofa}")
+    public ResponseEntity<?> produzirSofa(@PathVariable Long idSofa, @RequestParam Integer quantidade) {
+        service.produzirSofa(idSofa, quantidade); // CORRETO!
+        return ResponseEntity.ok().build();
+    }
+
 
     @DeleteMapping("/removerPeca/{idSofa}/{idPeca}")
     public ResponseEntity<?> removerPeca(
@@ -90,6 +97,20 @@ public class SofaController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
                     .body("Erro ao remover peça do sofá: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletarSofa(@PathVariable Long id) {
+        try {
+            boolean deleted = service.deletarSofa(id);
+            if (deleted) {
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Erro ao excluir sofá: " + e.getMessage());
         }
     }
 }

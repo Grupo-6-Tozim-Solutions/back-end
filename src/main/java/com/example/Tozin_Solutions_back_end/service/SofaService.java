@@ -10,6 +10,7 @@ import com.example.Tozin_Solutions_back_end.model.Peca;
 import com.example.Tozin_Solutions_back_end.model.QuantidadePecaEmSofa;
 import com.example.Tozin_Solutions_back_end.model.Sofa;
 import com.example.Tozin_Solutions_back_end.repository.SofaRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,6 +171,31 @@ public class SofaService {
 
                     return repository.save(sofa);
                 });
+    }
+
+    @Transactional
+    public void produzirSofa(Long idSofa, Integer quantidadeSofas) {
+        List<PecaComQuantidadeDTO> pecas = listarPecaPorSofa(idSofa);
+        for (PecaComQuantidadeDTO peca : pecas) {
+            // Remove do estoque a quantidade necessária para todos os sofás produzidos
+            pecaService.removerQuantidadeEstoque(
+                    peca.getId(),
+                    peca.getQuantidade() * quantidadeSofas
+            );
+        }
+    }
+
+    @Transactional
+    public boolean deletarSofa(Long id) {
+        Optional<Sofa> sofaOpt = repository.findById(id);
+        if (sofaOpt.isEmpty()) return false;
+
+        // Remove todas as relações de peças do sofá
+        quantidadePecaEmSofaService.removerTodasPorSofaId(id);
+
+        // Remove o sofá
+        repository.deleteById(id);
+        return true;
     }
 
 }
