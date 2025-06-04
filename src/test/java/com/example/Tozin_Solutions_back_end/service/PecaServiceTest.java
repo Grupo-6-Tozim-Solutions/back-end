@@ -58,11 +58,11 @@ public class PecaServiceTest {
 
     @Test
     public void deveLancarErro_QuandoCadastroNomeLongo() {
-        String nomeLongo = "A".repeat(26);
+        String nomeLongo = "A".repeat(41);
         CadastrarPecaDTO dto = new CadastrarPecaDTO(nomeLongo, 100, 10);
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> pecaService.salvarPeca(dto));
-        assertEquals("400 BAD_REQUEST \"O nome da peça não pode ter mais de 25 caracteres\"", ex.getMessage());
+        assertEquals("400 BAD_REQUEST \"O nome da peça não pode ter mais de 40 caracteres\"", ex.getMessage());
     }
 
     @Test

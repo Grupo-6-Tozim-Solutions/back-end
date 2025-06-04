@@ -6,6 +6,7 @@ import com.example.Tozin_Solutions_back_end.model.Usuario;
 import com.example.Tozin_Solutions_back_end.repository.UsuarioRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.web.exchanges.HttpExchangesEndpoint;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -34,6 +35,7 @@ public class UsuarioService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    private HttpExchangesEndpoint httpExchangesEndpoint;
 
     public UsuarioService(UsuarioRepository repository, AuthenticationManager authenticationManager, GerenciadorTokenJwt gerenciadorTokenJwt, PasswordEncoder passwordEncoder) {
         this.repository = repository;
@@ -63,7 +65,9 @@ public class UsuarioService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A senha não pode conter mais de 20 caracteres");
         }
 
-
+        if (dadosCadastro.getNome().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome não pode estar em branco");
+        }
 
         if(dadosCadastro.getNome().length() < 3) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome não pode conter menos de 3 caracteres");

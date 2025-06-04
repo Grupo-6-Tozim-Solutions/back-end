@@ -125,6 +125,15 @@ public class UsuarioServiceTest {
     }
 
     @Test
+    void deveLancarErro_QuandoNomeVazio() {
+        CadastrarUsuarioDTO dto = new CadastrarUsuarioDTO("", "email@email.com", "senha123");
+        when(usuarioRepository.findByNome(dto.getNome())).thenReturn(Optional.empty());
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
+        assertEquals("O nome não pode estar vazio", ex.getReason());
+    }
+
+    @Test
     void deveLancarErro_QuandoUsuarioNaoExisteNoLogin() {
         LoginUsuarioDTO dto = new LoginUsuarioDTO("inexistente@email.com", "senha123");
         when(usuarioRepository.findByEmail(dto.getEmail())).thenReturn(Optional.empty());

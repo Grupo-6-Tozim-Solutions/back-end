@@ -5,14 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 
 public class CadastrarUsuarioDTO {
 
-    @NotBlank(message = "Nome não pode ser vazio!")
     private String nome;
 
-    @NotBlank(message = "Email não pode ser vazio!")
-    @Email(message = "Formato de email inválido!")
     private String email;
 
-    @NotBlank(message = "Senha não pode ser vazia!")
     private String senha;
 
 
