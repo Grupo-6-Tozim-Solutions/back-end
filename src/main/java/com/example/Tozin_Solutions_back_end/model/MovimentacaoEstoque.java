@@ -11,15 +11,15 @@ public class MovimentacaoEstoque {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Integer quantidadeEntrada;
-    private Integer quantidadeSaida;
+    private Double quantidadeEntrada;
+    private Double quantidadeSaida;
     private LocalDateTime data = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "peca_id")
     private Peca peca;
 
-    public MovimentacaoEstoque(Integer quantidadeEntrada, Integer quantidadeSaida) {
+    public MovimentacaoEstoque(Double quantidadeEntrada, Double quantidadeSaida) {
         this.quantidadeEntrada = quantidadeEntrada;
         this.quantidadeSaida = quantidadeSaida;
     }
@@ -31,19 +31,19 @@ public class MovimentacaoEstoque {
         return id;
     }
 
-    public Integer getQuantidadeEntrada() {
+    public Double getQuantidadeEntrada() {
         return quantidadeEntrada;
     }
 
-    public void setQuantidadeEntrada(Integer quantidadeEntrada) {
+    public void setQuantidadeEntrada(Double quantidadeEntrada) {
         this.quantidadeEntrada = quantidadeEntrada;
     }
 
-    public Integer getQuantidadeSaida() {
+    public Double getQuantidadeSaida() {
         return quantidadeSaida;
     }
 
-    public void setQuantidadeSaida(Integer quantidadeSaida) {
+    public void setQuantidadeSaida(Double quantidadeSaida) {
         this.quantidadeSaida = quantidadeSaida;
     }
 

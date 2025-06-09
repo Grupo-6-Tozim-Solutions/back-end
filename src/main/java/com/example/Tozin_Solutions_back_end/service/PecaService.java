@@ -3,6 +3,7 @@ package com.example.Tozin_Solutions_back_end.service;
 import com.example.Tozin_Solutions_back_end.dto.movimentacaoEstoqueDTO.RegistrarMovimentacaoDTO;
 import com.example.Tozin_Solutions_back_end.dto.pecaDTO.AtualizarPecaDTO;
 import com.example.Tozin_Solutions_back_end.dto.pecaDTO.CadastrarPecaDTO;
+import com.example.Tozin_Solutions_back_end.enums.TipoPeca;
 import com.example.Tozin_Solutions_back_end.model.Peca;
 import com.example.Tozin_Solutions_back_end.repository.PecaRepository;
 import jakarta.transaction.Transactional;
@@ -32,6 +33,7 @@ PecaService {
         novaPeca.setNome(dadosNovaPeca.getNome());
         novaPeca.setQuantidadeEstoque(dadosNovaPeca.getQuantidadeEstoque());
         novaPeca.setQuantidadeMinima(dadosNovaPeca.getQuantidadeMinima());
+        novaPeca.setTipo(TipoPeca.valueOf(dadosNovaPeca.getTipo()));
 
         if(novaPeca.getNome().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A peça deve ter um nome");
@@ -48,7 +50,7 @@ PecaService {
 
         repository.save(novaPeca);
 
-        RegistrarMovimentacaoDTO novaMovimentacao = new RegistrarMovimentacaoDTO(0, dadosNovaPeca.getQuantidadeEstoque(), novaPeca);
+        RegistrarMovimentacaoDTO novaMovimentacao = new RegistrarMovimentacaoDTO(0.0, dadosNovaPeca.getQuantidadeEstoque(), novaPeca);
         movimentacaoService.registrarMovimentacao(novaMovimentacao);
         return novaPeca;
     }
@@ -61,22 +63,22 @@ PecaService {
         return repository.findById(id);
     }
 
-    public Optional<Peca> adicionarQuantidadeEstoque(Long id, Integer quantidadeAdicional){
+    public Optional<Peca> adicionarQuantidadeEstoque(Long id, Double quantidadeAdicional){
         return repository.findById(id).map(peca -> {
             if (quantidadeAdicional != null && quantidadeAdicional > 0){
                 peca.setQuantidadeEstoque(peca.getQuantidadeEstoque() + quantidadeAdicional);
-                RegistrarMovimentacaoDTO movimentacao = new RegistrarMovimentacaoDTO(0, quantidadeAdicional, peca);
+                RegistrarMovimentacaoDTO movimentacao = new RegistrarMovimentacaoDTO(0.0, quantidadeAdicional, peca);
                 movimentacaoService.registrarMovimentacao(movimentacao);
             }
             return repository.save(peca);
         });
     }
 
-    public Optional<Peca> removerQuantidadeEstoque(Long id, Integer quantidadeRemovida){
+    public Optional<Peca> removerQuantidadeEstoque(Long id, Double quantidadeRemovida){
         return repository.findById(id).map(peca -> {
             if (quantidadeRemovida != null && quantidadeRemovida > 0){
                 peca.setQuantidadeEstoque(peca.getQuantidadeEstoque() - quantidadeRemovida);
-                RegistrarMovimentacaoDTO movimentacao = new RegistrarMovimentacaoDTO(quantidadeRemovida, 0, peca);
+                RegistrarMovimentacaoDTO movimentacao = new RegistrarMovimentacaoDTO(quantidadeRemovida, 0.0, peca);
                 movimentacaoService.registrarMovimentacao(movimentacao);
             }
             return repository.save(peca);

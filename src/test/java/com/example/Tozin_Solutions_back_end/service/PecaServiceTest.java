@@ -34,11 +34,11 @@ public class PecaServiceTest {
 
     @Test
     public void deveCadastrarPeca_QuandoCadastroNomeValido() {
-        CadastrarPecaDTO dto = new CadastrarPecaDTO("Parafuso", 100, 10);
+        CadastrarPecaDTO dto = new CadastrarPecaDTO("Parafuso", 100.0, 10.0);
         Peca peca = new Peca();
         peca.setNome("Parafuso");
-        peca.setQuantidadeEstoque(100);
-        peca.setQuantidadeMinima(10);
+        peca.setQuantidadeEstoque(100.0);
+        peca.setQuantidadeMinima(10.0);
 
         when(repository.save(any(Peca.class))).thenReturn(peca);
 
@@ -50,7 +50,7 @@ public class PecaServiceTest {
 
     @Test
     public void deveLancarErro_QuandoCadastroNomeVazio() {
-        CadastrarPecaDTO dto = new CadastrarPecaDTO("", 100, 10);
+        CadastrarPecaDTO dto = new CadastrarPecaDTO("", 100.0, 10.0);
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> pecaService.salvarPeca(dto));
         assertEquals("400 BAD_REQUEST \"A peça deve ter um nome\"", ex.getMessage());
@@ -59,7 +59,7 @@ public class PecaServiceTest {
     @Test
     public void deveLancarErro_QuandoCadastroNomeLongo() {
         String nomeLongo = "A".repeat(41);
-        CadastrarPecaDTO dto = new CadastrarPecaDTO(nomeLongo, 100, 10);
+        CadastrarPecaDTO dto = new CadastrarPecaDTO(nomeLongo, 100.0, 10.0);
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> pecaService.salvarPeca(dto));
         assertEquals("400 BAD_REQUEST \"O nome da peça não pode ter mais de 40 caracteres\"", ex.getMessage());
@@ -67,7 +67,7 @@ public class PecaServiceTest {
 
     @Test
     public void deveLancarErro_QuandoCadastroNomeCurto() {
-        CadastrarPecaDTO dto = new CadastrarPecaDTO("AB", 100, 10);
+        CadastrarPecaDTO dto = new CadastrarPecaDTO("AB", 100.0, 10.0);
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> pecaService.salvarPeca(dto));
         assertEquals("400 BAD_REQUEST \"O nome da peça não pode ter menos de 3 caracteres\"", ex.getMessage());
@@ -75,7 +75,7 @@ public class PecaServiceTest {
 
     @Test
     public void deveLancarErro_QuandoCadastroNomeJaExistente() {
-        CadastrarPecaDTO dto = new CadastrarPecaDTO("Parafuso", 100, 10);
+        CadastrarPecaDTO dto = new CadastrarPecaDTO("Parafuso", 100.0, 10.0);
 
         when(repository.existsByNomeIgnoreCase("Parafuso")).thenReturn(true);
 
@@ -85,8 +85,8 @@ public class PecaServiceTest {
 
     @Test
     public void deveAtualizarPeca_QuandoNomeValido() {
-        AtualizarPecaDTO dto = new AtualizarPecaDTO("Parafuso Novo", 5);
-        Peca peca = new Peca("Parafuso", 100, 10);
+        AtualizarPecaDTO dto = new AtualizarPecaDTO("Parafuso Novo", 5.0);
+        Peca peca = new Peca("Parafuso", 100.0, 10.0);
 
         when(repository.findById(1L)).thenReturn(Optional.of(peca));
         when(repository.save(any(Peca.class))).thenReturn(peca);
@@ -100,8 +100,8 @@ public class PecaServiceTest {
     @Test
     public void deveLancarErro_QuandoAtualizarNomeLongo() {
         String nomeLongo = "A".repeat(26);
-        AtualizarPecaDTO dto = new AtualizarPecaDTO(nomeLongo, 5);
-        Peca peca = new Peca("Antigo", 100, 10);
+        AtualizarPecaDTO dto = new AtualizarPecaDTO(nomeLongo, 5.0);
+        Peca peca = new Peca("Antigo", 100.0, 10.0);
 
         when(repository.findById(1L)).thenReturn(Optional.of(peca));
 
@@ -111,8 +111,8 @@ public class PecaServiceTest {
 
     @Test
     public void deveLancarErro_QuandoAtualizarNomeCurto() {
-        AtualizarPecaDTO dto = new AtualizarPecaDTO("A", 5);
-        Peca peca = new Peca("Antigo", 100, 10);
+        AtualizarPecaDTO dto = new AtualizarPecaDTO("A", 5.0);
+        Peca peca = new Peca("Antigo", 100.0, 10.0);
 
         when(repository.findById(1L)).thenReturn(Optional.of(peca));
 
@@ -122,8 +122,8 @@ public class PecaServiceTest {
 
     @Test
     public void deveLancarErro_QuandoAtualizarNomeJaExistente() {
-        AtualizarPecaDTO dto = new AtualizarPecaDTO("Parafuso", 5);
-        Peca peca = new Peca("Original", 100, 10);
+        AtualizarPecaDTO dto = new AtualizarPecaDTO("Parafuso", 5.0);
+        Peca peca = new Peca("Original", 100.0, 10.0);
 
         when(repository.findById(1L)).thenReturn(Optional.of(peca));
         when(repository.existsByNomeIgnoreCase("Parafuso")).thenReturn(true);
@@ -134,8 +134,8 @@ public class PecaServiceTest {
 
     @Test
     public void deveLancarErro_QuandoAtualizarNomeVazio() {
-        AtualizarPecaDTO dto = new AtualizarPecaDTO("", 5);
-        Peca peca = new Peca("Antigo", 100, 10);
+        AtualizarPecaDTO dto = new AtualizarPecaDTO("", 5.0);
+        Peca peca = new Peca("Antigo", 100.0, 10.0);
 
         when(repository.findById(1L)).thenReturn(Optional.of(peca));
 

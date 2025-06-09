@@ -1,9 +1,8 @@
 package com.example.Tozin_Solutions_back_end.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.Tozin_Solutions_back_end.enums.TipoPeca;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,11 +13,14 @@ public class Peca {
     private Long id;
 
     private String nome;
-    private Integer quantidadeEstoque;
-    private Integer quantidadeMinima;
+    private Double quantidadeEstoque;
+    private Double quantidadeMinima;
     private LocalDateTime dataCadastro = LocalDateTime.now();
 
-    public Peca(String nome, Integer quantidadeEstoque, Integer quantidadeMinima) {
+    @Enumerated(EnumType.STRING)
+    private TipoPeca tipo;
+
+    public Peca(String nome, Double quantidadeEstoque, Double quantidadeMinima) {
         this.nome = nome;
         this.quantidadeEstoque = quantidadeEstoque;
         this.quantidadeMinima = quantidadeMinima;
@@ -47,19 +49,26 @@ public class Peca {
         this.nome = nome;
     }
 
-    public Integer getQuantidadeEstoque() {
+    public Double getQuantidadeEstoque() {
         return quantidadeEstoque;
     }
 
-    public void setQuantidadeEstoque(Integer quantidadeEstoque) {
+    public void setQuantidadeEstoque(Double quantidadeEstoque) {
         this.quantidadeEstoque = quantidadeEstoque;
     }
 
-    public Integer getQuantidadeMinima() {
+    public Double getQuantidadeMinima() {
         return quantidadeMinima;
     }
 
-    public void setQuantidadeMinima(Integer quantidadeMinima) {
+    public void setQuantidadeMinima(Double quantidadeMinima) {
         this.quantidadeMinima = quantidadeMinima;
+    }
+
+    public TipoPeca getTipo() {
+        return tipo;
+    }
+    public void setTipo(TipoPeca tipo) {
+        this.tipo = tipo;
     }
 }

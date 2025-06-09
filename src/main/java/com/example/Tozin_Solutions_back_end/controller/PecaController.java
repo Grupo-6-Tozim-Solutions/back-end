@@ -33,14 +33,14 @@ public class PecaController {
     }
 
     @PutMapping("/adicionarQuantidade/{id}/{quantidadeAdicional}")
-    public ResponseEntity<Peca> adicionarQuantidade(@PathVariable Long id, @PathVariable Integer quantidadeAdicional){
+    public ResponseEntity<Peca> adicionarQuantidade(@PathVariable Long id, @PathVariable Double quantidadeAdicional){
         return service.adicionarQuantidadeEstoque(id, quantidadeAdicional)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/removerQuantidade/{id}/{quantidadeRemovida}")
-    public ResponseEntity<Peca> removerQuantidade(@PathVariable Long id, @PathVariable Integer quantidadeRemovida){
+    public ResponseEntity<Peca> removerQuantidade(@PathVariable Long id, @PathVariable Double quantidadeRemovida){
         return service.removerQuantidadeEstoque(id, quantidadeRemovida)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

@@ -14,7 +14,7 @@ public class QuantidadePecaEmSofa {
 
     private Long idSofa;
     private Long idPeca;
-    private Integer quantidadePeca;
+    private Double quantidadePeca;
 
     public QuantidadePecaEmSofa() {
     }
@@ -31,7 +31,7 @@ public class QuantidadePecaEmSofa {
         return idPeca;
     }
 
-    public Integer getQuantidadePeca() {
+    public Double getQuantidadePeca() {
         return quantidadePeca;
     }
 
@@ -43,7 +43,7 @@ public class QuantidadePecaEmSofa {
         this.idPeca = idPeca;
     }
 
-    public void setQuantidadePeca(Integer quantidadePeca) {
+    public void setQuantidadePeca(Double quantidadePeca) {
         this.quantidadePeca = quantidadePeca;
     }
 }

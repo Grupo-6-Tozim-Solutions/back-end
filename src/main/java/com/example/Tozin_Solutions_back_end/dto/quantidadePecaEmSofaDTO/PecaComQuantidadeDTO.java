@@ -3,9 +3,9 @@ package com.example.Tozin_Solutions_back_end.dto.quantidadePecaEmSofaDTO;
 public class PecaComQuantidadeDTO {
     private Long id;
     private String nome;
-    private Integer quantidade;
+    private Double quantidade;
 
-    public PecaComQuantidadeDTO(Long id, String nome, Integer quantidade) {
+    public PecaComQuantidadeDTO(Long id, String nome, Double quantidade) {
         this.id = id;
         this.nome = nome;
         this.quantidade = quantidade;
@@ -20,7 +20,7 @@ public class PecaComQuantidadeDTO {
         return nome;
     }
 
-    public Integer getQuantidade() {
+    public Double getQuantidade() {
         return quantidade;
     }
 }

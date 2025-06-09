@@ -9,13 +9,16 @@ public class CadastrarPecaDTO {
     private String nome;
 
     @NotNull(message = "A quantidade em estoque deve ser informada!")
-    private Integer quantidadeEstoque;
+    private Double quantidadeEstoque;
 
     @NotNull(message = "A quantidade minima deve ser informada!")
     @Min(value = 5, message = "A quantidade minima não pode ser menor que 5!")
-    private Integer quantidadeMinima;
+    private Double quantidadeMinima;
 
-    public CadastrarPecaDTO(String nome, Integer quantidadeEstoque, Integer quantidadeMinima) {
+    @NotNull(message = "Deve conter o tipo de peça")
+    private String tipo;
+
+    public CadastrarPecaDTO(String nome, Double quantidadeEstoque, Double quantidadeMinima) {
         this.nome = nome;
         this.quantidadeEstoque = quantidadeEstoque;
         this.quantidadeMinima = quantidadeMinima;
@@ -25,11 +28,15 @@ public class CadastrarPecaDTO {
         return nome;
     }
 
-    public Integer getQuantidadeEstoque() {
+    public Double getQuantidadeEstoque() {
         return quantidadeEstoque;
     }
 
-    public Integer getQuantidadeMinima() {
+    public Double getQuantidadeMinima() {
         return quantidadeMinima;
+    }
+
+    public String getTipo() {
+        return tipo;
     }
 }

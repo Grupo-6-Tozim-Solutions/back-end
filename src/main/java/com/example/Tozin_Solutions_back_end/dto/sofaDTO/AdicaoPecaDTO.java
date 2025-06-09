@@ -2,9 +2,9 @@ package com.example.Tozin_Solutions_back_end.dto.sofaDTO;
 
 public class AdicaoPecaDTO {
     private Long idPeca;
-    private Integer quantidade;
+    private Double quantidade;
 
-    public AdicaoPecaDTO(Long idPeca, Integer quantidade) {
+    public AdicaoPecaDTO(Long idPeca, Double quantidade) {
         this.idPeca = idPeca;
         this.quantidade = quantidade;
     }
@@ -13,7 +13,7 @@ public class AdicaoPecaDTO {
         return idPeca;
     }
 
-    public Integer getQuantidade() {
+    public Double getQuantidade() {
         return quantidade;
     }
 }
