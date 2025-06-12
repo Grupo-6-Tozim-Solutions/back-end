@@ -128,7 +128,8 @@ public class SofaService {
                 pecasComQuantidade.add(new PecaComQuantidadeDTO(
                         peca.getId(),
                         peca.getNome(),
-                        relacao.getQuantidadePeca() // A quantidade associada ao sofá
+                        relacao.getQuantidadePeca(),
+                        peca.getTipo() != null ? peca.getTipo().name() : null
                 ));
             }
         }
