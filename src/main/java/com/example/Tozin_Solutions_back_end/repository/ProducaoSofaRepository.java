@@ -19,15 +19,4 @@ public interface ProducaoSofaRepository extends JpaRepository<ProducaoSofa, Long
 	""")
     List<ProducaoMensal> findProducaoAgrupadaPorMesAnoAtual();
 
-    // Sofás que mais saíram no mês (exemplo usando ProducaoSofa)
-    @Query("""
-    SELECT new map(s.modelo as name, SUM(p.quantidade) as value)
-    FROM ProducaoSofa p
-    JOIN Sofa s ON s.id = p.idSofa
-    WHERE MONTH(p.dataProducao) = MONTH(CURRENT_DATE) AND YEAR(p.dataProducao) = YEAR(CURRENT_DATE)
-    GROUP BY s.modelo
-    ORDER BY SUM(p.quantidade) DESC
-""")
-    List<Map<String, Object>> findSofasMaisSaidaMes();
-
 }

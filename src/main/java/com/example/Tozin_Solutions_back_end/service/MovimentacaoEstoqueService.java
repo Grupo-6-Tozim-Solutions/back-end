@@ -3,6 +3,7 @@ package com.example.Tozin_Solutions_back_end.service;
 import com.example.Tozin_Solutions_back_end.dto.movimentacaoEstoqueDTO.RegistrarMovimentacaoDTO;
 import com.example.Tozin_Solutions_back_end.model.MovimentacaoEstoque;
 import com.example.Tozin_Solutions_back_end.model.Peca;
+import com.example.Tozin_Solutions_back_end.repository.LogMovimentacaoRepository;
 import com.example.Tozin_Solutions_back_end.repository.MovimentacaoEstoqueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,10 @@ public class MovimentacaoEstoqueService {
 
     @Autowired
     private MovimentacaoEstoqueRepository repository;
+
+    @Autowired
+    private LogMovimentacaoRepository logMovimentacaoRepository;
+
 
     public MovimentacaoEstoque registrarMovimentacao(RegistrarMovimentacaoDTO dadosMovimentacao){
         MovimentacaoEstoque movimentacao = new MovimentacaoEstoque();
@@ -33,7 +38,7 @@ public class MovimentacaoEstoqueService {
 
 
     public List<Map<String, Object>> getPecasMaisSaidaMes() {
-        return repository.findPecasMaisSaidaMes();
+        return logMovimentacaoRepository.findPecasMaisSaidaMes();
     }
 
     public List<MovimentacaoEstoque> retornarTodas(){

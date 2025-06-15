@@ -11,6 +11,7 @@ import com.example.Tozin_Solutions_back_end.model.ProducaoSofa;
 import com.example.Tozin_Solutions_back_end.model.QuantidadePecaEmSofa;
 import com.example.Tozin_Solutions_back_end.model.Sofa;
 import com.example.Tozin_Solutions_back_end.model.projection.ProducaoMensal;
+import com.example.Tozin_Solutions_back_end.repository.LogMovimentacaoRepository;
 import com.example.Tozin_Solutions_back_end.repository.ProducaoSofaRepository;
 import com.example.Tozin_Solutions_back_end.repository.SofaRepository;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -49,11 +50,13 @@ public class SofaService {
     @Autowired
     private ProducaoSofaRepository producaoSofaRepository;
 
-    @Autowired
-    private MovimentacaoEstoqueService movimentacaoService;
 
     @Autowired
     private QuantidadePecaEmSofaService quantidadePecaEmSofaService;
+
+    @Autowired
+    private LogMovimentacaoRepository logMovimentacaoRepository;
+
 
     public Sofa salvarSofaComImagem(CadastrarSofaDTO dadosSofa, MultipartFile imagem) {
         Sofa sofa = new Sofa();
@@ -100,10 +103,8 @@ public class SofaService {
             Optional<Peca> peca = pecaService.buscarPorId(pecaAssociada.getIdPeca());
 
             if (peca.isEmpty()) {
-                continue; // ou lançar exceção se preferir
+                continue;
             }
-
-            // Esta verificação agora é redundante pois o salvarConfiguracao já faz isso
             RegistroQuantidadePecaEmSofaDTO configuracao =
                     new RegistroQuantidadePecaEmSofaDTO(
                             idSofa,
@@ -124,7 +125,6 @@ public class SofaService {
             Optional<Peca> pecaOptional = pecaService.buscarPorId(relacao.getIdPeca());
             if (pecaOptional.isPresent()) {
                 Peca peca = pecaOptional.get();
-                // Adiciona a quantidade que está sendo utilizada no sofá
                 pecasComQuantidade.add(new PecaComQuantidadeDTO(
                         peca.getId(),
                         peca.getNome(),
@@ -138,7 +138,6 @@ public class SofaService {
 
     @Transactional
     public Optional<Sofa> removerPeca(Long idSofa, Long idPeca) {
-        // Verifica se o sofá existe primeiro
         Optional<Sofa> sofa = repository.findById(idSofa);
         if (sofa.isEmpty()) {
             return Optional.empty();
@@ -148,10 +147,7 @@ public class SofaService {
         Optional<QuantidadePecaEmSofa> configuracao = quantidadePecaEmSofaService.encontrarPorIdSofaEPeca(idSofa, idPeca);
 
         if (peca.isPresent() && configuracao.isPresent()) {
-            // Devolve a quantidade ao estoque
             pecaService.adicionarQuantidadeEstoque(peca.get().getId(), configuracao.get().getQuantidadePeca());
-
-            // Remove a configuração usando o ID correto (da relação, não da peça)
             quantidadePecaEmSofaService.removerConfiguracao(configuracao.get().getId());
         }
 
@@ -190,7 +186,6 @@ public class SofaService {
         producaoSofaRepository.save(new ProducaoSofa(idSofa, LocalDateTime.now(), quantidadeSofas));
         List<PecaComQuantidadeDTO> pecas = listarPecaPorSofa(idSofa);
         for (PecaComQuantidadeDTO peca : pecas) {
-            // Remove do estoque a quantidade necessária para todos os sofás produzidos
             pecaService.removerQuantidadeEstoque(
                     peca.getId(),
                     peca.getQuantidade() * quantidadeSofas
@@ -199,16 +194,13 @@ public class SofaService {
     }
 
     public Map<Integer, Integer> getProducaoMensalAnoAtual() {
-        // Obtém os dados do banco
         List<ProducaoMensal> producaoPorMes = producaoSofaRepository.findProducaoAgrupadaPorMesAnoAtual();
-        // Cria um mapa com todos os meses (1-12) inicializados com 0
         Map<Integer, Integer> resultado = IntStream.rangeClosed(1, 12)
                 .boxed()
                 .collect(Collectors.toMap(
                         mes -> mes,
                         mes -> 0
                 ));
-        // Atualiza o mapa com os valores do banco de dados
         producaoPorMes.forEach(item ->
                 resultado.put(item.getMes(), item.getTotal())
         );
@@ -216,18 +208,14 @@ public class SofaService {
     }
 
     public List<Map<String, Object>> getSofasMaisSaidaMes() {
-        return producaoSofaRepository.findSofasMaisSaidaMes();
+        return logMovimentacaoRepository.findSofasMaisSaidaMes();
     }
 
     @Transactional
     public boolean deletarSofa(Long id) {
         Optional<Sofa> sofaOpt = repository.findById(id);
         if (sofaOpt.isEmpty()) return false;
-
-        // Remove todas as relações de peças do sofá
         quantidadePecaEmSofaService.removerTodasPorSofaId(id);
-
-        // Remove o sofá
         repository.deleteById(id);
         return true;
     }
