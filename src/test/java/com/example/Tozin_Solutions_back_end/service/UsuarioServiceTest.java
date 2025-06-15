@@ -130,7 +130,7 @@ public class UsuarioServiceTest {
         when(usuarioRepository.findByNome(dto.getNome())).thenReturn(Optional.empty());
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> usuarioService.cadastrarUsuario(dto));
-        assertEquals("O nome não pode estar vazio", ex.getReason());
+        assertEquals("O nome não pode estar em branco", ex.getReason());
     }
 
     @Test
