@@ -125,8 +125,8 @@ PecaService {
     public Boolean deletarPeca(Long id) {
         if (repository.existsById(id)) {
             // Excluir movimentações associadas à peça
-            movimentacaoService.deletarPorPecaId(id);
 
+            movimentacaoService.deletarPorPecaId(id);
             // Excluir a peça
             repository.deleteById(id);
             return true;
