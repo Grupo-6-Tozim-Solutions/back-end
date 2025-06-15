@@ -21,8 +21,7 @@ public interface LogMovimentacaoRepository extends JpaRepository<LogMovimentacao
     @Query("""
         SELECT new map(l.nomePeca as name, SUM(l.quantidadeSaida) as value)
         FROM LogMovimentacao l
-        WHERE l.tipoPeca = 'PECA'
-          AND MONTH(l.dataMovimentacao) = MONTH(CURRENT_DATE)
+        WHERE MONTH(l.dataMovimentacao) = MONTH(CURRENT_DATE)
           AND YEAR(l.dataMovimentacao) = YEAR(CURRENT_DATE)
         GROUP BY l.nomePeca
         ORDER BY SUM(l.quantidadeSaida) DESC
