@@ -18,8 +18,11 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -183,8 +186,24 @@ public class SofaService {
 
     @Transactional
     public void produzirSofa(Long idSofa, Integer quantidadeSofas) {
-        producaoSofaRepository.save(new ProducaoSofa(idSofa, LocalDateTime.now(), quantidadeSofas));
         List<PecaComQuantidadeDTO> pecas = listarPecaPorSofa(idSofa);
+
+        for (PecaComQuantidadeDTO peca : pecas) {
+            double quantidadeNecessaria = peca.getQuantidade() * quantidadeSofas;
+            Peca pecaEstoque = pecaService.buscarPorId(peca.getId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Peça não encontrada: " + peca.getNome()));
+            if (pecaEstoque.getQuantidadeEstoque() < quantidadeNecessaria) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Estoque insuficiente para a peça: " + peca.getNome() +
+                                ". Necessário: " + quantidadeNecessaria +
+                                ", disponível: " + pecaEstoque.getQuantidadeEstoque()
+                );
+            }
+        }
+
+        // 2º: Só desconta do estoque se passou na validação
+        producaoSofaRepository.save(new ProducaoSofa(idSofa, LocalDateTime.now(), quantidadeSofas));
         for (PecaComQuantidadeDTO peca : pecas) {
             pecaService.removerQuantidadeEstoque(
                     peca.getId(),
