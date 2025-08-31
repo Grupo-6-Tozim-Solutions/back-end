@@ -1,10 +1,10 @@
-package com.example.Tozin_Solutions_back_end.controller;
+package com.example.Tozin_Solutions_back_end.V1.controller;
 
-import com.example.Tozin_Solutions_back_end.dto.sofaDTO.AdicaoPecaDTO;
-import com.example.Tozin_Solutions_back_end.dto.sofaDTO.AtualizarSofaDTO;
-import com.example.Tozin_Solutions_back_end.dto.sofaDTO.CadastrarSofaDTO;
-import com.example.Tozin_Solutions_back_end.model.Sofa;
-import com.example.Tozin_Solutions_back_end.service.SofaService;
+import com.example.Tozin_Solutions_back_end.V1.dto.sofaDTO.AdicaoPecaDTO;
+import com.example.Tozin_Solutions_back_end.V1.dto.sofaDTO.AtualizarSofaDTO;
+import com.example.Tozin_Solutions_back_end.V1.dto.sofaDTO.CadastrarSofaDTO;
+import com.example.Tozin_Solutions_back_end.V1.model.Sofa;
+import com.example.Tozin_Solutions_back_end.V1.service.SofaService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,6 @@ public class SofaController {
 
     @Autowired
     private SofaService service;
-
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Sofa> cadastrarSofaComImagem(
@@ -80,7 +79,7 @@ public class SofaController {
 
     @PostMapping("/produzir/{idSofa}")
     public ResponseEntity<?> produzirSofa(@PathVariable Long idSofa, @RequestParam Integer quantidade) {
-        service.produzirSofa(idSofa, quantidade); // CORRETO!
+        service.produzirSofa(idSofa, quantidade);
         return ResponseEntity.ok().build();
     }
 

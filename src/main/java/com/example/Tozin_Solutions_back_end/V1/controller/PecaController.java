@@ -1,9 +1,9 @@
-package com.example.Tozin_Solutions_back_end.controller;
+package com.example.Tozin_Solutions_back_end.V1.controller;
 
-import com.example.Tozin_Solutions_back_end.dto.pecaDTO.AtualizarPecaDTO;
-import com.example.Tozin_Solutions_back_end.dto.pecaDTO.CadastrarPecaDTO;
-import com.example.Tozin_Solutions_back_end.model.Peca;
-import com.example.Tozin_Solutions_back_end.service.PecaService;
+import com.example.Tozin_Solutions_back_end.V1.dto.pecaDTO.AtualizarPecaDTO;
+import com.example.Tozin_Solutions_back_end.V1.dto.pecaDTO.CadastrarPecaDTO;
+import com.example.Tozin_Solutions_back_end.V1.model.Peca;
+import com.example.Tozin_Solutions_back_end.V1.service.PecaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

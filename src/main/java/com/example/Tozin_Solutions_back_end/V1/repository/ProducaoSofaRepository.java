@@ -1,12 +1,11 @@
-package com.example.Tozin_Solutions_back_end.repository;
+package com.example.Tozin_Solutions_back_end.V1.repository;
 
-import com.example.Tozin_Solutions_back_end.model.ProducaoSofa;
-import com.example.Tozin_Solutions_back_end.model.projection.ProducaoMensal;
+import com.example.Tozin_Solutions_back_end.V1.model.ProducaoSofa;
+import com.example.Tozin_Solutions_back_end.V1.model.projection.ProducaoMensal;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ProducaoSofaRepository extends JpaRepository<ProducaoSofa, Long> {
 

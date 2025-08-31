@@ -1,7 +1,7 @@
-package com.example.Tozin_Solutions_back_end.controller;
+package com.example.Tozin_Solutions_back_end.V1.controller;
 
-import com.example.Tozin_Solutions_back_end.model.MovimentacaoEstoque;
-import com.example.Tozin_Solutions_back_end.service.MovimentacaoEstoqueService;
+import com.example.Tozin_Solutions_back_end.V1.model.MovimentacaoEstoque;
+import com.example.Tozin_Solutions_back_end.V1.service.MovimentacaoEstoqueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

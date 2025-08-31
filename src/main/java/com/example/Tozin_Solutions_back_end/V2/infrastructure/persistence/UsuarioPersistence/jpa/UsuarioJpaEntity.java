@@ -1,4 +1,4 @@
-package com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.jpa;
+package com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.UsuarioPersistence.jpa;
 
 import jakarta.persistence.*;
 

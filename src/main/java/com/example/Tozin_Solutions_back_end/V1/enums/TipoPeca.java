@@ -1,4 +1,4 @@
-package com.example.Tozin_Solutions_back_end.enums;
+package com.example.Tozin_Solutions_back_end.V1.enums;
 
 public enum TipoPeca {
     PECA,

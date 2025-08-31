@@ -1,8 +1,8 @@
-package com.example.Tozin_Solutions_back_end.service;
+package com.example.Tozin_Solutions_back_end.V1.service;
 
-import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.UsuarioDetalhesDTO;
-import com.example.Tozin_Solutions_back_end.model.Usuario;
-import com.example.Tozin_Solutions_back_end.repository.UsuarioRepository;
+import com.example.Tozin_Solutions_back_end.V1.dto.usuarioDTO.UsuarioDetalhesDTO;
+import com.example.Tozin_Solutions_back_end.V1.model.Usuario;
+import com.example.Tozin_Solutions_back_end.V1.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

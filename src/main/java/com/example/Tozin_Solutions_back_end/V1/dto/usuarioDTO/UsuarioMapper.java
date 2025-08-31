@@ -1,6 +1,6 @@
-package com.example.Tozin_Solutions_back_end.dto.usuarioDTO;
+package com.example.Tozin_Solutions_back_end.V1.dto.usuarioDTO;
 
-import com.example.Tozin_Solutions_back_end.model.Usuario;
+import com.example.Tozin_Solutions_back_end.V1.model.Usuario;
 
 public class UsuarioMapper {
 

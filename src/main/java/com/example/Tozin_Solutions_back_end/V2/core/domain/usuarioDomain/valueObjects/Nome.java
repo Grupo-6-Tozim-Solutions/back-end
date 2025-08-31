@@ -1,6 +1,6 @@
-package com.example.Tozin_Solutions_back_end.V2.domain.usuarioDomain.valueObjects;
+package com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.valueObjects;
 
-import com.example.Tozin_Solutions_back_end.V2.domain.usuarioDomain.excepetion.DomainException;
+import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.excepetion.DomainException;
 
 public record Nome(String value) {
     public Nome{

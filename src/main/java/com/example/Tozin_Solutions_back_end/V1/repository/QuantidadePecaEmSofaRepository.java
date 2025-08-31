@@ -1,6 +1,6 @@
-package com.example.Tozin_Solutions_back_end.repository;
+package com.example.Tozin_Solutions_back_end.V1.repository;
 
-import com.example.Tozin_Solutions_back_end.model.QuantidadePecaEmSofa;
+import com.example.Tozin_Solutions_back_end.V1.model.QuantidadePecaEmSofa;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

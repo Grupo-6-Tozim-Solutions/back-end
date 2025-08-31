@@ -1,4 +1,4 @@
-package com.example.Tozin_Solutions_back_end.V2.domain.usuarioDomain.excepetion;
+package com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.excepetion;
 
 public class UsuarioNaoEncontradoException extends DomainException {
 

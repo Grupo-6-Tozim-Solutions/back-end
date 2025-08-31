@@ -1,4 +1,4 @@
-package com.example.Tozin_Solutions_back_end.V2.core.application.usuarioApplication.repository;
+package com.example.Tozin_Solutions_back_end.V2.core.application.usuarioApplication.port;
 
 import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.Usuario;
 

@@ -1,7 +1,6 @@
-package com.example.Tozin_Solutions_back_end.repository;
+package com.example.Tozin_Solutions_back_end.V1.repository;
 
-import com.example.Tozin_Solutions_back_end.model.LogMovimentacao;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.Tozin_Solutions_back_end.V1.model.LogMovimentacao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

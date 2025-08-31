@@ -1,4 +1,4 @@
-package com.example.Tozin_Solutions_back_end.dto.usuarioDTO;
+package com.example.Tozin_Solutions_back_end.V1.dto.usuarioDTO;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

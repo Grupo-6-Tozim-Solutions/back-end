@@ -1,4 +1,5 @@
-package com.example.Tozin_Solutions_back_end.config;
+/*
+package com.example.Tozin_Solutions_back_end.V1.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -11,4 +12,4 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:uploads/");
     }
-}
+}*/

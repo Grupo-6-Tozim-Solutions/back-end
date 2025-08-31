@@ -1,4 +1,4 @@
-package com.example.Tozin_Solutions_back_end.dto.usuarioDTO;
+package com.example.Tozin_Solutions_back_end.V1.dto.usuarioDTO;
 
 public class DadosUsuarioDTO {
     private Long id;

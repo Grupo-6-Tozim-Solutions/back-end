@@ -1,4 +1,4 @@
 package com.example.Tozin_Solutions_back_end.V2.core.application.usuarioApplication.dto;
 
-public record LoginRequest() {
+public record LoginRequest(String email, String senha) {
 }

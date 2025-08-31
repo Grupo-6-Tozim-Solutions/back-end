@@ -1,9 +1,9 @@
-package com.example.Tozin_Solutions_back_end.V2.domain.usuarioDomain;
+package com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain;
 
-import com.example.Tozin_Solutions_back_end.V2.domain.usuarioDomain.excepetion.DomainException;
-import com.example.Tozin_Solutions_back_end.V2.domain.usuarioDomain.valueObjects.Email;
-import com.example.Tozin_Solutions_back_end.V2.domain.usuarioDomain.valueObjects.Nome;
-import com.example.Tozin_Solutions_back_end.V2.domain.usuarioDomain.valueObjects.SenhaHash;
+import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.excepetion.DomainException;
+import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.valueObjects.Email;
+import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.valueObjects.Nome;
+import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.valueObjects.SenhaHash;
 
 public class Usuario {
     private Long id;

@@ -1,10 +1,9 @@
-package com.example.Tozin_Solutions_back_end.service;
+package com.example.Tozin_Solutions_back_end.V1.service;
 
-import com.example.Tozin_Solutions_back_end.dto.movimentacaoEstoqueDTO.RegistrarMovimentacaoDTO;
-import com.example.Tozin_Solutions_back_end.model.MovimentacaoEstoque;
-import com.example.Tozin_Solutions_back_end.model.Peca;
-import com.example.Tozin_Solutions_back_end.repository.LogMovimentacaoRepository;
-import com.example.Tozin_Solutions_back_end.repository.MovimentacaoEstoqueRepository;
+import com.example.Tozin_Solutions_back_end.V1.dto.movimentacaoEstoqueDTO.RegistrarMovimentacaoDTO;
+import com.example.Tozin_Solutions_back_end.V1.model.MovimentacaoEstoque;
+import com.example.Tozin_Solutions_back_end.V1.repository.LogMovimentacaoRepository;
+import com.example.Tozin_Solutions_back_end.V1.repository.MovimentacaoEstoqueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

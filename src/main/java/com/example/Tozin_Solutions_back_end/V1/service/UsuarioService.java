@@ -1,9 +1,9 @@
-package com.example.Tozin_Solutions_back_end.service;
+package com.example.Tozin_Solutions_back_end.V1.service;
 
-import com.example.Tozin_Solutions_back_end.config.GerenciadorTokenJwt;
-import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.*;
-import com.example.Tozin_Solutions_back_end.model.Usuario;
-import com.example.Tozin_Solutions_back_end.repository.UsuarioRepository;
+import com.example.Tozin_Solutions_back_end.V1.dto.usuarioDTO.*;
+import com.example.Tozin_Solutions_back_end.V1.config.GerenciadorTokenJwt;
+import com.example.Tozin_Solutions_back_end.V1.model.Usuario;
+import com.example.Tozin_Solutions_back_end.V1.repository.UsuarioRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.web.exchanges.HttpExchangesEndpoint;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service

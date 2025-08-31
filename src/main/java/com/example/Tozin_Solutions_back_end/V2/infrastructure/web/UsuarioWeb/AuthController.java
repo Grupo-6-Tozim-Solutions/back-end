@@ -1,4 +1,4 @@
-package com.example.Tozin_Solutions_back_end.V2.infrastructure.web;
+package com.example.Tozin_Solutions_back_end.V2.infrastructure.web.UsuarioWeb;
 
 import com.example.Tozin_Solutions_back_end.V2.core.application.usuarioApplication.dto.LoginRequest;
 import com.example.Tozin_Solutions_back_end.V2.core.application.usuarioApplication.dto.LoginResponse;

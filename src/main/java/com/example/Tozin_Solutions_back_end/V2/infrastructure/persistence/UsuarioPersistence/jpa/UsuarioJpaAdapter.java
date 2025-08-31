@@ -1,8 +1,8 @@
-package com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.jpa;
+package com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.UsuarioPersistence.jpa;
 
 import com.example.Tozin_Solutions_back_end.V2.core.application.usuarioApplication.port.UsuarioRepositoryPort;
 import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.Usuario;
-import com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.mapper.UsuarioEntityMapper;
+import com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.UsuarioPersistence.mapper.UsuarioEntityMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;

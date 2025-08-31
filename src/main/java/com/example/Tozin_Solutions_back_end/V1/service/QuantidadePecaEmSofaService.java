@@ -1,8 +1,8 @@
-package com.example.Tozin_Solutions_back_end.service;
+package com.example.Tozin_Solutions_back_end.V1.service;
 
-import com.example.Tozin_Solutions_back_end.dto.quantidadePecaEmSofaDTO.RegistroQuantidadePecaEmSofaDTO;
-import com.example.Tozin_Solutions_back_end.model.QuantidadePecaEmSofa;
-import com.example.Tozin_Solutions_back_end.repository.QuantidadePecaEmSofaRepository;
+import com.example.Tozin_Solutions_back_end.V1.dto.quantidadePecaEmSofaDTO.RegistroQuantidadePecaEmSofaDTO;
+import com.example.Tozin_Solutions_back_end.V1.model.QuantidadePecaEmSofa;
+import com.example.Tozin_Solutions_back_end.V1.repository.QuantidadePecaEmSofaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

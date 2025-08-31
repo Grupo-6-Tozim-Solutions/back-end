@@ -1,9 +1,11 @@
 package com.example.Tozin_Solutions_back_end.service;
 
-import com.example.Tozin_Solutions_back_end.dto.pecaDTO.AtualizarPecaDTO;
-import com.example.Tozin_Solutions_back_end.dto.pecaDTO.CadastrarPecaDTO;
-import com.example.Tozin_Solutions_back_end.model.Peca;
-import com.example.Tozin_Solutions_back_end.repository.PecaRepository;
+import com.example.Tozin_Solutions_back_end.V1.service.MovimentacaoEstoqueService;
+import com.example.Tozin_Solutions_back_end.V1.service.PecaService;
+import com.example.Tozin_Solutions_back_end.V1.dto.pecaDTO.AtualizarPecaDTO;
+import com.example.Tozin_Solutions_back_end.V1.dto.pecaDTO.CadastrarPecaDTO;
+import com.example.Tozin_Solutions_back_end.V1.model.Peca;
+import com.example.Tozin_Solutions_back_end.V1.repository.PecaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

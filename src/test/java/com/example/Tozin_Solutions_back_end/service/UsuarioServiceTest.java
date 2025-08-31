@@ -1,17 +1,16 @@
 package com.example.Tozin_Solutions_back_end.service;
 
-import com.example.Tozin_Solutions_back_end.config.GerenciadorTokenJwt;
-import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.CadastrarUsuarioDTO;
-import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.LoginUsuarioDTO;
-import com.example.Tozin_Solutions_back_end.model.Usuario;
-import com.example.Tozin_Solutions_back_end.repository.UsuarioRepository;
+import com.example.Tozin_Solutions_back_end.V1.service.UsuarioService;
+import com.example.Tozin_Solutions_back_end.V1.config.GerenciadorTokenJwt;
+import com.example.Tozin_Solutions_back_end.V1.dto.usuarioDTO.CadastrarUsuarioDTO;
+import com.example.Tozin_Solutions_back_end.V1.dto.usuarioDTO.LoginUsuarioDTO;
+import com.example.Tozin_Solutions_back_end.V1.model.Usuario;
+import com.example.Tozin_Solutions_back_end.V1.repository.UsuarioRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 

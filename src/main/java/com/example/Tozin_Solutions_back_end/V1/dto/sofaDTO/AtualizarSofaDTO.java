@@ -1,4 +1,4 @@
-package com.example.Tozin_Solutions_back_end.dto.sofaDTO;
+package com.example.Tozin_Solutions_back_end.V1.dto.sofaDTO;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

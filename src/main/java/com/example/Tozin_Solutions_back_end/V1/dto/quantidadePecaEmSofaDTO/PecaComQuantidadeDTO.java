@@ -1,4 +1,4 @@
-package com.example.Tozin_Solutions_back_end.dto.quantidadePecaEmSofaDTO;
+package com.example.Tozin_Solutions_back_end.V1.dto.quantidadePecaEmSofaDTO;
 
 public class PecaComQuantidadeDTO {
     private Long id;

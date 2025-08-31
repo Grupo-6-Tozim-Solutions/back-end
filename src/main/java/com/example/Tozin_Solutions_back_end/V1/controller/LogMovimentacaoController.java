@@ -1,7 +1,7 @@
-package com.example.Tozin_Solutions_back_end.controller;
+package com.example.Tozin_Solutions_back_end.V1.controller;
 
-import com.example.Tozin_Solutions_back_end.model.LogMovimentacao;
-import com.example.Tozin_Solutions_back_end.service.LogMovimentacaoService;
+import com.example.Tozin_Solutions_back_end.V1.model.LogMovimentacao;
+import com.example.Tozin_Solutions_back_end.V1.service.LogMovimentacaoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,23 +18,23 @@ import java.util.List;
 public class LogMovimentacaoController {
 
     @Autowired
-    private com.example.Tozin_Solutions_back_end.service.LogMovimentacaoService logMovimentacaoService;
+    private LogMovimentacaoService logMovimentacaoService;
 
     @GetMapping
     @Operation(summary = "Lista todas as movimentações registradas")
-    public ResponseEntity<List<com.example.Tozin_Solutions_back_end.model.LogMovimentacao>> listarTodasMovimentacoes() {
+    public ResponseEntity<List<LogMovimentacao>> listarTodasMovimentacoes() {
         return ResponseEntity.ok(logMovimentacaoService.listarTodas());
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Busca uma movimentação específica por ID")
-    public ResponseEntity<com.example.Tozin_Solutions_back_end.model.LogMovimentacao> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<LogMovimentacao> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(logMovimentacaoService.buscarPorId(id));
     }
 
     @GetMapping("/filtro")
     @Operation(summary = "Filtra movimentações por período")
-    public ResponseEntity<List<com.example.Tozin_Solutions_back_end.model.LogMovimentacao>> filtrarPorPeriodo(
+    public ResponseEntity<List<LogMovimentacao>> filtrarPorPeriodo(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime inicio,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fim) {
         return ResponseEntity.ok(logMovimentacaoService.filtrarPorPeriodo(inicio, fim));
@@ -42,7 +42,7 @@ public class LogMovimentacaoController {
 
     @GetMapping("/peca/{nomePeca}")
     @Operation(summary = "Busca movimentações por nome da peça")
-    public ResponseEntity<List<com.example.Tozin_Solutions_back_end.model.LogMovimentacao>> buscarPorNomePeca(@PathVariable String nomePeca) {
+    public ResponseEntity<List<LogMovimentacao>> buscarPorNomePeca(@PathVariable String nomePeca) {
         return ResponseEntity.ok(logMovimentacaoService.buscarPorNomePeca(nomePeca));
     }
 }

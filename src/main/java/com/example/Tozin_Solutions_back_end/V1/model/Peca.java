@@ -1,6 +1,6 @@
-package com.example.Tozin_Solutions_back_end.model;
+package com.example.Tozin_Solutions_back_end.V1.model;
 
-import com.example.Tozin_Solutions_back_end.enums.TipoPeca;
+import com.example.Tozin_Solutions_back_end.V1.enums.TipoPeca;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

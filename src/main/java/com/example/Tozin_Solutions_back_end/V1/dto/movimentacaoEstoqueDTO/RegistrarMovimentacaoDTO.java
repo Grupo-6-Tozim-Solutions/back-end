@@ -1,6 +1,6 @@
-package com.example.Tozin_Solutions_back_end.dto.movimentacaoEstoqueDTO;
+package com.example.Tozin_Solutions_back_end.V1.dto.movimentacaoEstoqueDTO;
 
-import com.example.Tozin_Solutions_back_end.model.Peca;
+import com.example.Tozin_Solutions_back_end.V1.model.Peca;
 
 public class RegistrarMovimentacaoDTO {
     private Double quantidadeSaida;

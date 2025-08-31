@@ -1,10 +1,10 @@
-package com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.mapper;
+package com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.UsuarioPersistence.mapper;
 
 import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.Usuario;
 import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.valueObjects.Email;
 import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.valueObjects.Nome;
 import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.valueObjects.SenhaHash;
-import com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.jpa.UsuarioJpaEntity;
+import com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.UsuarioPersistence.jpa.UsuarioJpaEntity;
 
 import java.util.Objects;
 

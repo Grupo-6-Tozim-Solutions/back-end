@@ -1,27 +1,29 @@
-package com.example.Tozin_Solutions_back_end.V2.application.usuarioApplication.service;
+package com.example.Tozin_Solutions_back_end.V2.core.application.usuarioApplication.service;
 
-import com.example.Tozin_Solutions_back_end.V2.application.usuarioApplication.dto.CadastrarUsuarioInput;
-import com.example.Tozin_Solutions_back_end.V2.application.usuarioApplication.dto.UsuarioOutput;
-import com.example.Tozin_Solutions_back_end.V2.application.usuarioApplication.port.PasswordHasher;
-import com.example.Tozin_Solutions_back_end.V2.application.usuarioApplication.repository.UsuarioRepository;
-import com.example.Tozin_Solutions_back_end.V2.domain.usuarioDomain.Usuario;
-import com.example.Tozin_Solutions_back_end.V2.domain.usuarioDomain.excepetion.DomainException;
-import com.example.Tozin_Solutions_back_end.V2.domain.usuarioDomain.valueObjects.Email;
-import com.example.Tozin_Solutions_back_end.V2.domain.usuarioDomain.valueObjects.Nome;
-import com.example.Tozin_Solutions_back_end.V2.domain.usuarioDomain.valueObjects.SenhaHash;
+import com.example.Tozin_Solutions_back_end.V2.core.application.usuarioApplication.dto.CadastrarUsuarioInput;
+import com.example.Tozin_Solutions_back_end.V2.core.application.usuarioApplication.dto.UsuarioOutput;
+import com.example.Tozin_Solutions_back_end.V2.core.application.usuarioApplication.port.PasswordHasherPort;
+import com.example.Tozin_Solutions_back_end.V2.core.application.usuarioApplication.port.UsuarioRepositoryPort;
+import com.example.Tozin_Solutions_back_end.V2.core.application.usuarioApplication.useCase.CadastrarUsuarioUseCase;
+import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.Usuario;
+import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.excepetion.DomainException;
+import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.valueObjects.Email;
+import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.valueObjects.Nome;
+import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.valueObjects.SenhaHash;
+import jakarta.persistence.Id;
 
-public class CadastrarUsuarioService {
+public class CadastrarUsuarioService implements CadastrarUsuarioUseCase {
 
-    private final UsuarioRepository usuarioRepository;
-    private final PasswordHasher passwordHasher;
+    private final UsuarioRepositoryPort usuarioRepositoryPort;
+    private final PasswordHasherPort passwordHasherPort;
 
-    public CadastrarUsuarioService(UsuarioRepository usuarioRepository, PasswordHasher passwordHasher) {
-        this.usuarioRepository = usuarioRepository;
-        this.passwordHasher = passwordHasher;
+    public CadastrarUsuarioService(UsuarioRepositoryPort usuarioRepositoryPort, PasswordHasherPort passwordHasherPort) {
+        this.usuarioRepositoryPort = usuarioRepositoryPort;
+        this.passwordHasherPort = passwordHasherPort;
     }
 
     public UsuarioOutput executar(CadastrarUsuarioInput entrada) {
-        if (usuarioRepository.existePorEmail(entrada.Email())) {
+        if (usuarioRepositoryPort.existePorEmail(entrada.email())) {
             throw new DomainException("O email inserido já é utilizado");
         }
 
@@ -29,14 +31,14 @@ public class CadastrarUsuarioService {
             throw new DomainException("A senha deve ter entre 4 e 20 caracteres");
         }
 
-        String senhaHash = passwordHasher.hash(entrada.senha());
+        String senhaHash = passwordHasherPort.hash(entrada.senha());
 
         var usuario = Usuario.criarUsuario(
                 new Nome(entrada.nome()),
-                new Email(entrada.Email()),
+                new Email(entrada.email()),
                 new SenhaHash(senhaHash)
         );
-        var salvo = usuarioRepository.salvar(usuario);
+        var salvo = usuarioRepositoryPort.salvar(usuario);
         return new UsuarioOutput(salvo.getNome().value(), salvo.getEmail().value());
     }
 }

@@ -1,4 +1,4 @@
-package com.example.Tozin_Solutions_back_end.config.swagger;
+package com.example.Tozin_Solutions_back_end.V1.config.swagger;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;

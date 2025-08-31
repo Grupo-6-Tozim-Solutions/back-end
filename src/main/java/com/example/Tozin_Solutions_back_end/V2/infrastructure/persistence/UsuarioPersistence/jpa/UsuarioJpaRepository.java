@@ -1,6 +1,5 @@
-package com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.jpa;
+package com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.UsuarioPersistence.jpa;
 
-import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

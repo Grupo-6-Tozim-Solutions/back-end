@@ -1,4 +1,4 @@
-package com.example.Tozin_Solutions_back_end.V2.infrastructure.web;
+package com.example.Tozin_Solutions_back_end.V2.infrastructure.web.PecaWeb;
 
 import com.example.Tozin_Solutions_back_end.V2.core.application.PecaApplication.dto.AtualizarPecaInput;
 import com.example.Tozin_Solutions_back_end.V2.core.application.PecaApplication.dto.CadastrarPecaInput;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/pecas")
-public class PecaController {
+public class PecaControllerV2 {
 
     private final CadastrarPecaUseCase cadastrarPecaUseCase;
     private final ListarPecasUseCase listarPecasUseCase;
@@ -23,14 +23,14 @@ public class PecaController {
     private final AdicionarEstoqueUseCase adicionarEstoqueUseCase;
     private final RemoverEstoqueUseCase removerEstoqueUseCase;
 
-    public PecaController(CadastrarPecaUseCase cadastrarPecaUseCase,
-                          ListarPecasUseCase listarPecasUseCase,
-                          BuscarPecaPorIdUseCase buscarPecaPorIdUseCase,
-                          AtualizarPecaUseCase atualizarPecaUseCase,
-                          DeletarPecaUseCase deletarPecaUseCase,
-                          VerificarEstoqueCriticoUseCase verificarEstoqueCriticoUseCase,
-                          AdicionarEstoqueUseCase adicionarEstoqueUseCase,
-                          RemoverEstoqueUseCase removerEstoqueUseCase) {
+    public PecaControllerV2(CadastrarPecaUseCase cadastrarPecaUseCase,
+                            ListarPecasUseCase listarPecasUseCase,
+                            BuscarPecaPorIdUseCase buscarPecaPorIdUseCase,
+                            AtualizarPecaUseCase atualizarPecaUseCase,
+                            DeletarPecaUseCase deletarPecaUseCase,
+                            VerificarEstoqueCriticoUseCase verificarEstoqueCriticoUseCase,
+                            AdicionarEstoqueUseCase adicionarEstoqueUseCase,
+                            RemoverEstoqueUseCase removerEstoqueUseCase) {
         this.cadastrarPecaUseCase = cadastrarPecaUseCase;
         this.listarPecasUseCase = listarPecasUseCase;
         this.buscarPecaPorIdUseCase = buscarPecaPorIdUseCase;
@@ -47,7 +47,7 @@ public class PecaController {
         return ResponseEntity.ok(output);
     }
 
-    @GetMapping
+    @GetMapping("/listarTodas")
     public ResponseEntity<List<PecaOutput>> listarTodas() {
         List<PecaOutput> pecas = listarPecasUseCase.executar();
         return ResponseEntity.ok(pecas);
@@ -79,19 +79,19 @@ public class PecaController {
         return ResponseEntity.ok(pecasCriticas);
     }
 
-    @PatchMapping("/{id}/adicionar-estoque")
+    @PutMapping("/adicionar-estoque/{id}/{quantidadeAdicional}")
     public ResponseEntity<PecaOutput> adicionarEstoque(
             @PathVariable Long id,
-            @RequestParam Double quantidade) {
-        PecaOutput output = adicionarEstoqueUseCase.executar(id, quantidade);
+            @PathVariable Double quantidadeAdicional) {
+        PecaOutput output = adicionarEstoqueUseCase.executar(id, quantidadeAdicional);
         return ResponseEntity.ok(output);
     }
 
-    @PatchMapping("/{id}/remover-estoque")
+    @PutMapping("remover-estoque/{id}/{quantidadeRemovida}")
     public ResponseEntity<PecaOutput> removerEstoque(
             @PathVariable Long id,
-            @RequestParam Double quantidade) {
-        PecaOutput output = removerEstoqueUseCase.executar(id, quantidade);
+            @PathVariable Double quantidadeRemovida) {
+        PecaOutput output = removerEstoqueUseCase.executar(id, quantidadeRemovida);
         return ResponseEntity.ok(output);
     }
 }

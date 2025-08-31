@@ -1,4 +1,4 @@
-package com.example.Tozin_Solutions_back_end.model;
+package com.example.Tozin_Solutions_back_end.V1.model;
 
 import jakarta.persistence.*;
 
@@ -11,7 +11,6 @@ public class QuantidadePecaEmSofa {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private Long idSofa;
     private Long idPeca;
     private Double quantidadePeca;

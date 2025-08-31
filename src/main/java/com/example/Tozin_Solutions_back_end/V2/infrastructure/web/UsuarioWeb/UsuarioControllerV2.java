@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v2/usuarios")
-public class UsuarioV2Controller {
+public class UsuarioControllerV2 {
 
     private final CadastrarUsuarioUseCase cadastrarUsuarioUseCase;
 
-    public UsuarioV2Controller(CadastrarUsuarioUseCase cadastrarUsuarioUseCase) {
+    public UsuarioControllerV2(CadastrarUsuarioUseCase cadastrarUsuarioUseCase) {
         this.cadastrarUsuarioUseCase = cadastrarUsuarioUseCase;
     }
 

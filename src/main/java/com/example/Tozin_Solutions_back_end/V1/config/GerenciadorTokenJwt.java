@@ -1,4 +1,4 @@
-package com.example.Tozin_Solutions_back_end.config;
+package com.example.Tozin_Solutions_back_end.V1.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

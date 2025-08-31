@@ -1,4 +1,4 @@
-package com.example.Tozin_Solutions_back_end.dto.quantidadePecaEmSofaDTO;
+package com.example.Tozin_Solutions_back_end.V1.dto.quantidadePecaEmSofaDTO;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;

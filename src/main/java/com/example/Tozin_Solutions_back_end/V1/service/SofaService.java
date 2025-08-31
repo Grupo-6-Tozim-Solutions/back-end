@@ -1,22 +1,19 @@
-package com.example.Tozin_Solutions_back_end.service;
+package com.example.Tozin_Solutions_back_end.V1.service;
 
-import com.example.Tozin_Solutions_back_end.dto.movimentacaoEstoqueDTO.RegistrarMovimentacaoDTO;
-import com.example.Tozin_Solutions_back_end.dto.quantidadePecaEmSofaDTO.PecaComQuantidadeDTO;
-import com.example.Tozin_Solutions_back_end.dto.quantidadePecaEmSofaDTO.RegistroQuantidadePecaEmSofaDTO;
-import com.example.Tozin_Solutions_back_end.dto.sofaDTO.AdicaoPecaDTO;
-import com.example.Tozin_Solutions_back_end.dto.sofaDTO.AtualizarSofaDTO;
-import com.example.Tozin_Solutions_back_end.dto.sofaDTO.CadastrarSofaDTO;
-import com.example.Tozin_Solutions_back_end.model.Peca;
-import com.example.Tozin_Solutions_back_end.model.ProducaoSofa;
-import com.example.Tozin_Solutions_back_end.model.QuantidadePecaEmSofa;
-import com.example.Tozin_Solutions_back_end.model.Sofa;
-import com.example.Tozin_Solutions_back_end.model.projection.ProducaoMensal;
-import com.example.Tozin_Solutions_back_end.repository.LogMovimentacaoRepository;
-import com.example.Tozin_Solutions_back_end.repository.ProducaoSofaRepository;
-import com.example.Tozin_Solutions_back_end.repository.SofaRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
+import com.example.Tozin_Solutions_back_end.V1.dto.quantidadePecaEmSofaDTO.PecaComQuantidadeDTO;
+import com.example.Tozin_Solutions_back_end.V1.dto.quantidadePecaEmSofaDTO.RegistroQuantidadePecaEmSofaDTO;
+import com.example.Tozin_Solutions_back_end.V1.dto.sofaDTO.AdicaoPecaDTO;
+import com.example.Tozin_Solutions_back_end.V1.dto.sofaDTO.AtualizarSofaDTO;
+import com.example.Tozin_Solutions_back_end.V1.dto.sofaDTO.CadastrarSofaDTO;
+import com.example.Tozin_Solutions_back_end.V1.model.Peca;
+import com.example.Tozin_Solutions_back_end.V1.model.ProducaoSofa;
+import com.example.Tozin_Solutions_back_end.V1.model.QuantidadePecaEmSofa;
+import com.example.Tozin_Solutions_back_end.V1.model.Sofa;
+import com.example.Tozin_Solutions_back_end.V1.model.projection.ProducaoMensal;
+import com.example.Tozin_Solutions_back_end.V1.repository.LogMovimentacaoRepository;
+import com.example.Tozin_Solutions_back_end.V1.repository.ProducaoSofaRepository;
+import com.example.Tozin_Solutions_back_end.V1.repository.SofaRepository;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -30,9 +27,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

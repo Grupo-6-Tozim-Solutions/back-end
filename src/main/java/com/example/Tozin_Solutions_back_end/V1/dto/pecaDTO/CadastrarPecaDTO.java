@@ -1,4 +1,4 @@
-package com.example.Tozin_Solutions_back_end.dto.pecaDTO;
+package com.example.Tozin_Solutions_back_end.V1.dto.pecaDTO;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

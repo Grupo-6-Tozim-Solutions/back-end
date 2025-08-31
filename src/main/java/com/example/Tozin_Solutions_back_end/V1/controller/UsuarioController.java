@@ -1,8 +1,8 @@
-package com.example.Tozin_Solutions_back_end.controller;
+package com.example.Tozin_Solutions_back_end.V1.controller;
 
-import com.example.Tozin_Solutions_back_end.dto.usuarioDTO.*;
-import com.example.Tozin_Solutions_back_end.model.Usuario;
-import com.example.Tozin_Solutions_back_end.service.UsuarioService;
+import com.example.Tozin_Solutions_back_end.V1.dto.usuarioDTO.*;
+import com.example.Tozin_Solutions_back_end.V1.model.Usuario;
+import com.example.Tozin_Solutions_back_end.V1.service.UsuarioService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
-package com.example.Tozin_Solutions_back_end.service;
+package com.example.Tozin_Solutions_back_end.V1.service;
 
-import com.example.Tozin_Solutions_back_end.model.LogMovimentacao;
-import com.example.Tozin_Solutions_back_end.repository.LogMovimentacaoRepository;
+import com.example.Tozin_Solutions_back_end.V1.model.LogMovimentacao;
+import com.example.Tozin_Solutions_back_end.V1.repository.LogMovimentacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

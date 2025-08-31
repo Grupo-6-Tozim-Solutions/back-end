@@ -1,16 +1,15 @@
-package com.example.Tozin_Solutions_back_end.service;
+package com.example.Tozin_Solutions_back_end.V1.service;
 
-import com.example.Tozin_Solutions_back_end.dto.movimentacaoEstoqueDTO.RegistrarMovimentacaoDTO;
-import com.example.Tozin_Solutions_back_end.dto.pecaDTO.AtualizarPecaDTO;
-import com.example.Tozin_Solutions_back_end.dto.pecaDTO.CadastrarPecaDTO;
-import com.example.Tozin_Solutions_back_end.enums.TipoPeca;
-import com.example.Tozin_Solutions_back_end.model.Peca;
-import com.example.Tozin_Solutions_back_end.repository.PecaRepository;
+import com.example.Tozin_Solutions_back_end.V1.dto.movimentacaoEstoqueDTO.RegistrarMovimentacaoDTO;
+import com.example.Tozin_Solutions_back_end.V1.dto.pecaDTO.AtualizarPecaDTO;
+import com.example.Tozin_Solutions_back_end.V1.dto.pecaDTO.CadastrarPecaDTO;
+import com.example.Tozin_Solutions_back_end.V1.enums.TipoPeca;
+import com.example.Tozin_Solutions_back_end.V1.model.Peca;
+import com.example.Tozin_Solutions_back_end.V1.repository.PecaRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 

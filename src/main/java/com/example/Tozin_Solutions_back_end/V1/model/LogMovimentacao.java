@@ -1,4 +1,4 @@
-package com.example.Tozin_Solutions_back_end.model;
+package com.example.Tozin_Solutions_back_end.V1.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 

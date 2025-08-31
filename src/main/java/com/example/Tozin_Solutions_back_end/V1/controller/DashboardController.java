@@ -1,7 +1,7 @@
-package com.example.Tozin_Solutions_back_end.controller;
+package com.example.Tozin_Solutions_back_end.V1.controller;
 
-import com.example.Tozin_Solutions_back_end.service.MovimentacaoEstoqueService;
-import com.example.Tozin_Solutions_back_end.service.SofaService;
+import com.example.Tozin_Solutions_back_end.V1.service.MovimentacaoEstoqueService;
+import com.example.Tozin_Solutions_back_end.V1.service.SofaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
