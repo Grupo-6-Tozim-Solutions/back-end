@@ -1,6 +1,6 @@
 package com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.PecaPersistence.Jpa;
 
-import com.example.Tozin_Solutions_back_end.V2.core.application.PecaApplication.port.PecaRepositoryPort;
+import com.example.Tozin_Solutions_back_end.V2.core.application.pecaApplication.port.PecaRepositoryPort;
 import com.example.Tozin_Solutions_back_end.V2.core.domain.PecaDomain.Peca;
 import com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.PecaPersistence.mapper.PecaMapper;
 import org.springframework.stereotype.Component;
