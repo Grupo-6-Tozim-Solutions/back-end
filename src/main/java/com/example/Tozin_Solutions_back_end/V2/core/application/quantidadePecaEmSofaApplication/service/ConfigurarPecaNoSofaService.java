@@ -20,18 +20,15 @@ public class ConfigurarPecaNoSofaService implements ConfigurarPecaNoSofaUseCase 
 
     @Override
     public ConfiguracaoPecaSofaOutput executar(ConfigurarPecaNoSofaInput input) {
-        // Verifica se já existe configuração
         var configExistente = configuracaoRepositoryPort.buscarPorSofaIdEPecaId(
                 input.sofaId(), input.pecaId());
 
         QuantidadePecaEmSofa configuracao;
 
         if (configExistente.isPresent()) {
-            // Atualiza configuração existente
             configuracao = configExistente.get();
             configuracao.atualizarQuantidade(new Quantidade(input.quantidade()));
         } else {
-            // Cria nova configuração
             configuracao = QuantidadePecaEmSofa.criarConfiguracao(
                     input.sofaId(), input.pecaId(), new Quantidade(input.quantidade()));
         }
