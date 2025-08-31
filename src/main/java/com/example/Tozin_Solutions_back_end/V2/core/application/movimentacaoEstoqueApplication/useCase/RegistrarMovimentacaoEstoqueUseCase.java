@@ -1,0 +1,8 @@
+package com.example.Tozin_Solutions_back_end.V2.core.application.movimentacaoEstoqueApplication.useCase;
+
+import com.example.Tozin_Solutions_back_end.V2.core.application.movimentacaoEstoqueApplication.dto.MovimentacaoEstoqueInput;
+import com.example.Tozin_Solutions_back_end.V2.core.application.movimentacaoEstoqueApplication.dto.MovimentacaoEstoqueOutput;
+
+public interface RegistrarMovimentacaoEstoqueUseCase {
+   MovimentacaoEstoqueOutput executar(MovimentacaoEstoqueInput movimentacaoEstoqueInput);
+}
