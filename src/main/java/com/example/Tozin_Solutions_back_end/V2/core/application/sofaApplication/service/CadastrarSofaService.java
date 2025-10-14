@@ -9,24 +9,35 @@ import com.example.Tozin_Solutions_back_end.V2.core.domain.SofaDomain.ValueObjec
 import com.example.Tozin_Solutions_back_end.V2.core.domain.SofaDomain.ValueObjects.ModeloSofa;
 import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.excepetion.DomainException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 public class CadastrarSofaService implements CadastrarSofaUseCase {
 
     private final SofaRepositoryPort sofaRepositoryPort;
+    private final ImageStorageService imageStorageService;
 
-    public CadastrarSofaService(SofaRepositoryPort sofaRepositoryPort) {
+    public CadastrarSofaService(SofaRepositoryPort sofaRepositoryPort,
+                                ImageStorageService imageStorageService) {
         this.sofaRepositoryPort = sofaRepositoryPort;
+        this.imageStorageService = imageStorageService;
     }
 
     @Override
-    public SofaOutput executar(CadastrarSofaInput input) {
+    public SofaOutput executar(CadastrarSofaInput input, MultipartFile imagem) {
         if (sofaRepositoryPort.existePorModelo(input.modelo())) {
             throw new DomainException("Já existe um sofá com esse modelo");
         }
 
+        String caminhoImagemSalva = imageStorageService.salvarImagemSofa(imagem);
+
         ModeloSofa modelo = new ModeloSofa(input.modelo());
-        CaminhoImagem caminhoImagem = new CaminhoImagem(input.caminhoImagem());
+        CaminhoImagem caminhoImagem = new CaminhoImagem(caminhoImagemSalva);
 
         Sofa sofa = Sofa.criarSofa(modelo, caminhoImagem);
         Sofa sofaSalvo = sofaRepositoryPort.salvar(sofa);

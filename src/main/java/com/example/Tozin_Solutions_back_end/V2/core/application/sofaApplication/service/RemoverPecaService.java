@@ -6,6 +6,7 @@ import com.example.Tozin_Solutions_back_end.V2.core.application.sofaApplication.
 import com.example.Tozin_Solutions_back_end.V2.core.application.sofaApplication.useCase.RemoverPecaUseCase;
 import com.example.Tozin_Solutions_back_end.V2.core.domain.SofaDomain.Sofa;
 import com.example.Tozin_Solutions_back_end.V2.core.domain.SofaDomain.exception.SofaNaoEncontradoException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +22,7 @@ public class RemoverPecaService implements RemoverPecaUseCase {
     }
 
     @Override
+    @Transactional
     public SofaOutput executar(Long sofaId, Long pecaId) {
         Sofa sofa = sofaRepositoryPort.buscarPorId(sofaId)
                 .orElseThrow(() -> new SofaNaoEncontradoException(sofaId));

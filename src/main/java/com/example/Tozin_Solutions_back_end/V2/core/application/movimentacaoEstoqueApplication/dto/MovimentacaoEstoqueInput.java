@@ -5,16 +5,13 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 public record MovimentacaoEstoqueInput(
-   @NotNull(message = "Tipo de peça não pode ser vazio")
-   String tipoPeca,
+        @NotNull(message = "ID da peça não pode ser nulo")
+        Long pecaId,
 
-   @NotBlank(message = "Nome da pessoa não pode ser vazio")
-   String nomePeca,
+        @Positive(message = "Quantidade de entrada não pode ser negativa")
+        Double quantidadeEntrada,
 
-   @Positive(message = "Quantidade de entrada não pode ser negativa")
-   Double quantidadeEntrada,
-
-   @Positive(message = "Quantidade de entrada não pode ser negativa")
-   Double quantidadeSaida
+        @Positive(message = "Quantidade de saída não pode ser negativa")
+        Double quantidadeSaida
 ) {
 }

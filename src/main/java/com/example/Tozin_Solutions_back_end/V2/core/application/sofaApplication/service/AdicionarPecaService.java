@@ -28,7 +28,6 @@ public class AdicionarPecaService implements AdicionarPecaUseCase {
         Sofa sofa = sofaRepositoryPort.buscarPorId(sofaId)
                 .orElseThrow(() -> new SofaNaoEncontradoException(sofaId));
 
-        // Adiciona cada peça
         for (AdicionarPecaInput.PecaQuantidade peca : input.pecas()) {
             var configExistente = configuracaoRepositoryPort.buscarPorSofaIdEPecaId(sofaId, peca.pecaId());
 

@@ -2,6 +2,7 @@ package com.example.Tozin_Solutions_back_end.V2.core.domain.MovimentacaoEstoqueD
 
 import com.example.Tozin_Solutions_back_end.V2.core.domain.MovimentacaoEstoqueDomain.valueObjects.QuantidadeEntrada;
 import com.example.Tozin_Solutions_back_end.V2.core.domain.MovimentacaoEstoqueDomain.valueObjects.QuantidadeSaida;
+import com.example.Tozin_Solutions_back_end.V2.core.domain.PecaDomain.Peca;
 import com.example.Tozin_Solutions_back_end.V2.core.domain.PecaDomain.valueObjects.NomePeca;
 import com.example.Tozin_Solutions_back_end.V2.core.domain.PecaDomain.valueObjects.TipoPeca;
 
@@ -10,53 +11,43 @@ import java.time.LocalDateTime;
 public class MovimentacaoEstoque {
     private Long id;
     private LocalDateTime dataMovimentacao;
-    private TipoPeca tipoPeca;
-    private NomePeca nomePeca;
+    private Peca peca;
     private QuantidadeEntrada quantidadeEntrada;
     private QuantidadeSaida quantidadeSaida;
 
-    private MovimentacaoEstoque(TipoPeca tipoPeca, NomePeca nomePeca, QuantidadeEntrada quantidadeEntrada, QuantidadeSaida quantidadeSaida) {
+    private MovimentacaoEstoque(Peca peca, QuantidadeEntrada quantidadeEntrada, QuantidadeSaida quantidadeSaida) {
         this.dataMovimentacao = LocalDateTime.now();
-        this.tipoPeca = tipoPeca;
-        this.nomePeca = nomePeca;
+        this.peca = peca;
         this.quantidadeEntrada = quantidadeEntrada;
         this.quantidadeSaida = quantidadeSaida;
     }
 
-    private MovimentacaoEstoque(Long id, LocalDateTime dataMovimentacao, TipoPeca tipoPeca, NomePeca nomePeca, QuantidadeEntrada quantidadeEntrada, QuantidadeSaida quantidadeSaida) {
-        this.id = id;
-        this.dataMovimentacao = dataMovimentacao;
-        this.tipoPeca = tipoPeca;
-        this.nomePeca = nomePeca;
-        this.quantidadeEntrada = quantidadeEntrada;
-        this.quantidadeSaida = quantidadeSaida;
+    public static MovimentacaoEstoque registrarEntrada(Peca peca, QuantidadeEntrada quantidadeEntrada) {
+        if (peca == null) {
+            throw new IllegalArgumentException("Peça não pode ser nula");
+        }
+        if (quantidadeEntrada == null || quantidadeEntrada.value() <= 0) {
+            throw new IllegalArgumentException("Quantidade de entrada deve ser positiva");
+        }
+        return new MovimentacaoEstoque(peca, quantidadeEntrada, new QuantidadeSaida(0.0));
     }
 
-    public static MovimentacaoEstoque registrarMovimentacao(TipoPeca tipo, NomePeca nome, QuantidadeEntrada quantidadeEntrada, QuantidadeSaida quantidadeSaida){
-        return new MovimentacaoEstoque(tipo, nome, quantidadeEntrada, quantidadeSaida);
+    public static MovimentacaoEstoque registrarSaida(Peca peca, QuantidadeSaida quantidadeSaida) {
+        if (peca == null) {
+            throw new IllegalArgumentException("Peça não pode ser nula");
+        }
+        if (quantidadeSaida == null || quantidadeSaida.value() <= 0) {
+            throw new IllegalArgumentException("Quantidade de saída deve ser positiva");
+        }
+        return new MovimentacaoEstoque(peca, new QuantidadeEntrada(0.0), quantidadeSaida);
     }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public LocalDateTime getDataMovimentacao() { return dataMovimentacao; }
+    public Peca getPeca() { return peca; }
+    public QuantidadeEntrada getQuantidadeEntrada() { return quantidadeEntrada; }
+    public QuantidadeSaida getQuantidadeSaida() { return quantidadeSaida; }
 
-    public LocalDateTime getDataMovimentacao() {
-        return dataMovimentacao;
-    }
-
-    public TipoPeca getTipoPeca() {
-        return tipoPeca;
-    }
-
-    public NomePeca getNomePeca() {
-        return nomePeca;
-    }
-
-    public QuantidadeEntrada getQuantidadeEntrada() {
-        return quantidadeEntrada;
-    }
-
-    public QuantidadeSaida getQuantidadeSaida() {
-        return quantidadeSaida;
-    }
+    public void setId(Long id) { this.id = id; }
+    public void setDataMovimentacao(LocalDateTime dataMovimentacao) { this.dataMovimentacao = dataMovimentacao; }
 }

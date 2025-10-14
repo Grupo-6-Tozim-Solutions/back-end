@@ -5,8 +5,9 @@ import java.time.LocalDateTime;
 public record MovimentacaoEstoqueOutput(
         Long id,
         LocalDateTime dataMovimentacao,
-        String tipoPeca,
+        Long pecaId,
         String nomePeca,
+        String tipoPeca,
         Double quantidadeEntrada,
         Double quantidadeSaida
 ) {

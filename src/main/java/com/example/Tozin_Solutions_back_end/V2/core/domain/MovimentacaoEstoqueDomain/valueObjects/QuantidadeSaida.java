@@ -1,15 +1,22 @@
 package com.example.Tozin_Solutions_back_end.V2.core.domain.MovimentacaoEstoqueDomain.valueObjects;
 
-public record QuantidadeSaida(Double value) {
+public class QuantidadeSaida {
+    private final Double value;
+
     public QuantidadeSaida(Double value) {
-        if(value > 0){
-            throw new IllegalArgumentException("A quantidade de saida não pode ser negativa");
+        // ✅ SOLUÇÃO SIMPLES: Apenas garantir que não é null
+        if (value == null) {
+            throw new IllegalArgumentException("A quantidade de saida não pode ser nula");
         }
-        this.value = value;
+
+        // ✅ FORÇAR valor positivo (resolvendo problema de -0.0)
+        this.value = Math.abs(value);
+
+        // Log para debug
+        System.out.println("QuantidadeSaida criada - valor original: " + value + ", valor final: " + this.value);
     }
 
-    @Override
     public Double value() {
-        return value == null ? 0 : value;
+        return value;
     }
 }

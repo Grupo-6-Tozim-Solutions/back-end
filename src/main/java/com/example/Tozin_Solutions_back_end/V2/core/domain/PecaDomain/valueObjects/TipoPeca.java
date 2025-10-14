@@ -4,7 +4,6 @@ public enum TipoPeca {
     PECA,
     ESPUMA,
     TECIDO;
-
     public static TipoPeca fromString(String value) {
         return TipoPeca.valueOf(value.toUpperCase());
     }
