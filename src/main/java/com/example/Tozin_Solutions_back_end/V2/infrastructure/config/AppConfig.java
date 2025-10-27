@@ -4,6 +4,7 @@ import com.example.Tozin_Solutions_back_end.V2.core.application.usuarioApplicati
 import com.example.Tozin_Solutions_back_end.V2.core.application.usuarioApplication.port.UsuarioRepositoryPort;
 import com.example.Tozin_Solutions_back_end.V2.core.application.usuarioApplication.service.CadastrarUsuarioService;
 import com.example.Tozin_Solutions_back_end.V2.core.application.usuarioApplication.useCase.CadastrarUsuarioUseCase;
+import com.example.Tozin_Solutions_back_end.V2.infrastructure.messaging.RabbitMQNotificacaoProducer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,8 +14,9 @@ public class AppConfig {
     @Bean
     public CadastrarUsuarioUseCase cadastrarUsuarioUseCase(
             UsuarioRepositoryPort usuarioRepositoryPort,
-            PasswordHasherPort passwordHasherPort) {
-        return new CadastrarUsuarioService(usuarioRepositoryPort, passwordHasherPort);
+            PasswordHasherPort passwordHasherPort,
+            RabbitMQNotificacaoProducer notificacaoProducer) {
+        return new CadastrarUsuarioService(usuarioRepositoryPort, passwordHasherPort, notificacaoProducer);
     }
 
 

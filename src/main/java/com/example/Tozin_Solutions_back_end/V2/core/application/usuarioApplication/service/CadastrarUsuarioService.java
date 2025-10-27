@@ -10,16 +10,19 @@ import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.excepet
 import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.valueObjects.Email;
 import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.valueObjects.Nome;
 import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.valueObjects.SenhaHash;
+import com.example.Tozin_Solutions_back_end.V2.infrastructure.messaging.RabbitMQNotificacaoProducer;
 import jakarta.persistence.Id;
 
-public class CadastrarUsuarioService implements CadastrarUsuarioUseCase {
+public class    CadastrarUsuarioService implements CadastrarUsuarioUseCase {
 
     private final UsuarioRepositoryPort usuarioRepositoryPort;
     private final PasswordHasherPort passwordHasherPort;
+    private final RabbitMQNotificacaoProducer notificacaoProducer;
 
-    public CadastrarUsuarioService(UsuarioRepositoryPort usuarioRepositoryPort, PasswordHasherPort passwordHasherPort) {
+    public CadastrarUsuarioService(UsuarioRepositoryPort usuarioRepositoryPort, PasswordHasherPort passwordHasherPort, RabbitMQNotificacaoProducer notificacaoProducer) {
         this.usuarioRepositoryPort = usuarioRepositoryPort;
         this.passwordHasherPort = passwordHasherPort;
+        this.notificacaoProducer = notificacaoProducer;
     }
 
     public UsuarioOutput executar(CadastrarUsuarioInput entrada) {
@@ -39,6 +42,7 @@ public class CadastrarUsuarioService implements CadastrarUsuarioUseCase {
                 new SenhaHash(senhaHash)
         );
         var salvo = usuarioRepositoryPort.salvar(usuario);
+        notificacaoProducer.enviarEmailBoasVindas(salvo.getEmail().value(), salvo.getNome().value());
         return new UsuarioOutput(salvo.getNome().value(), salvo.getEmail().value());
     }
 }
