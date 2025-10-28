@@ -3,6 +3,8 @@ package com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.sofaP
 import com.example.Tozin_Solutions_back_end.V2.core.application.sofaApplication.port.SofaRepositoryPort;
 import com.example.Tozin_Solutions_back_end.V2.core.domain.SofaDomain.Sofa;
 import com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.sofaPersistence.mapper.SofaMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -53,4 +55,15 @@ public class SofaRepositoryAdapter implements SofaRepositoryPort {
     public void deletarPorId(Long id) {
         sofaJpaRepository.deleteById(id);
     }
+
+    @Override
+    public Page<Sofa> buscarTodosPaginados(Pageable pageable, String filter) {
+        if (filter != null && !filter.trim().isEmpty()) {
+            return sofaJpaRepository.findByModeloContainingIgnoreCase(filter.trim(), pageable)
+                    .map(SofaMapper::toDomain);
+        } else {
+            return sofaJpaRepository.findAll(pageable).map(SofaMapper::toDomain);
+        }
+    }
+
 }

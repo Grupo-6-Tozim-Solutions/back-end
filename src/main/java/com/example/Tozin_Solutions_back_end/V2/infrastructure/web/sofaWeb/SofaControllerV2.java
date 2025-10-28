@@ -23,6 +23,7 @@
         private final RemoverPecaUseCase removerPecaUseCase;
         private final ProduzirSofaUseCase produzirSofaUseCase;
         private final ListarPecasPorSofaUseCase listarPecasPorSofaUseCase;
+        private final ListarSofasPaginadosUseCase listarSofasPaginadosUseCase;
 
         public SofaControllerV2(CadastrarSofaUseCase cadastrarSofaUseCase,
                                 ListarSofasUseCase listarSofasUseCase,
@@ -32,7 +33,8 @@
                                 AdicionarPecaUseCase adicionarPecaUseCase,
                                 RemoverPecaUseCase removerPecaUseCase,
                                 ProduzirSofaUseCase produzirSofaUseCase,
-                                ListarPecasPorSofaUseCase listarPecasPorSofaUseCase) {
+                                ListarPecasPorSofaUseCase listarPecasPorSofaUseCase,
+                                ListarSofasPaginadosUseCase listarSofasPaginadosUseCase) {
             this.cadastrarSofaUseCase = cadastrarSofaUseCase;
             this.listarSofasUseCase = listarSofasUseCase;
             this.buscarSofaPorIdUseCase = buscarSofaPorIdUseCase;
@@ -42,6 +44,7 @@
             this.removerPecaUseCase = removerPecaUseCase;
             this.produzirSofaUseCase = produzirSofaUseCase;
             this.listarPecasPorSofaUseCase = listarPecasPorSofaUseCase;
+            this.listarSofasPaginadosUseCase = listarSofasPaginadosUseCase;
         }
 
         @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -58,6 +61,23 @@
             List<SofaOutput> sofas = listarSofasUseCase.executar();
             return ResponseEntity.ok(sofas);
         }
+
+        @GetMapping("/listarPaginado")
+        public ResponseEntity<SofaPaginationResponse> listarPaginado(
+                @RequestParam(defaultValue = "1") int page,
+                @RequestParam(defaultValue = "8") int size,
+                @RequestParam(defaultValue = "modelo") String sortBy,
+                @RequestParam(defaultValue = "asc") String sortDirection,
+                @RequestParam(required = false) String filter) {
+
+            SofaPaginationRequest request = new SofaPaginationRequest(
+                    page, size, sortBy, sortDirection, filter != null ? filter : ""
+            );
+
+            SofaPaginationResponse response = listarSofasPaginadosUseCase.executar(request);
+            return ResponseEntity.ok(response);
+        }
+
 
         @GetMapping("/{id}")
         public ResponseEntity<SofaOutput> buscarPorId(@PathVariable Long id) {
