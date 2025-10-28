@@ -1,8 +1,6 @@
 package com.example.Tozin_Solutions_back_end.V2.infrastructure.web.pecaWeb;
 
-import com.example.Tozin_Solutions_back_end.V2.core.application.pecaApplication.dto.AtualizarPecaInput;
-import com.example.Tozin_Solutions_back_end.V2.core.application.pecaApplication.dto.CadastrarPecaInput;
-import com.example.Tozin_Solutions_back_end.V2.core.application.pecaApplication.dto.PecaOutput;
+import com.example.Tozin_Solutions_back_end.V2.core.application.pecaApplication.dto.*;
 import com.example.Tozin_Solutions_back_end.V2.core.application.pecaApplication.useCase.*;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +20,7 @@ public class PecaControllerV2 {
     private final VerificarEstoqueCriticoUseCase verificarEstoqueCriticoUseCase;
     private final AdicionarEstoqueUseCase adicionarEstoqueUseCase;
     private final RemoverEstoqueUseCase removerEstoqueUseCase;
+    private final ListarPecasPaginadasUseCase listarPecasPaginadasUseCase;
 
     public PecaControllerV2(CadastrarPecaUseCase cadastrarPecaUseCase,
                             ListarPecasUseCase listarPecasUseCase,
@@ -30,7 +29,8 @@ public class PecaControllerV2 {
                             DeletarPecaUseCase deletarPecaUseCase,
                             VerificarEstoqueCriticoUseCase verificarEstoqueCriticoUseCase,
                             AdicionarEstoqueUseCase adicionarEstoqueUseCase,
-                            RemoverEstoqueUseCase removerEstoqueUseCase) {
+                            RemoverEstoqueUseCase removerEstoqueUseCase,
+                            ListarPecasPaginadasUseCase listarPecasPaginadasUseCase) {
         this.cadastrarPecaUseCase = cadastrarPecaUseCase;
         this.listarPecasUseCase = listarPecasUseCase;
         this.buscarPecaPorIdUseCase = buscarPecaPorIdUseCase;
@@ -39,6 +39,7 @@ public class PecaControllerV2 {
         this.verificarEstoqueCriticoUseCase = verificarEstoqueCriticoUseCase;
         this.adicionarEstoqueUseCase = adicionarEstoqueUseCase;
         this.removerEstoqueUseCase = removerEstoqueUseCase;
+        this.listarPecasPaginadasUseCase = listarPecasPaginadasUseCase;
     }
 
     @PostMapping
@@ -51,6 +52,22 @@ public class PecaControllerV2 {
     public ResponseEntity<List<PecaOutput>> listarTodas() {
         List<PecaOutput> pecas = listarPecasUseCase.executar();
         return ResponseEntity.ok(pecas);
+    }
+
+    @GetMapping("/listarPaginado")
+    public ResponseEntity<PecaPaginationResponse> listarPaginado(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "nome") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection,
+            @RequestParam(required = false) String filter) {
+
+        PecaPaginationRequest request = new PecaPaginationRequest(
+                page, size, sortBy, sortDirection, filter != null ? filter : ""
+        );
+
+        PecaPaginationResponse response = listarPecasPaginadasUseCase.executar(request);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")

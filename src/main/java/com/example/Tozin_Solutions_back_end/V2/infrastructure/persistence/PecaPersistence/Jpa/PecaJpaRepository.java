@@ -1,5 +1,7 @@
 package com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.PecaPersistence.Jpa;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -21,4 +23,7 @@ public interface PecaJpaRepository extends JpaRepository<PecaJpaEntity, Long> {
 
     @Query("SELECT p FROM PecaJpaEntity p WHERE LOWER(p.nome) LIKE LOWER(CONCAT('%', :nome, '%')) ORDER BY p.nome")
     List<PecaJpaEntity> findByNomeContainingIgnoreCase(String nome);
+
+
+    Page<PecaJpaEntity> findByNomeContainingIgnoreCase(String nome, Pageable pageable);
 }

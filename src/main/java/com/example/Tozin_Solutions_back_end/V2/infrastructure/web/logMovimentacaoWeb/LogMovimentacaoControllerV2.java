@@ -1,16 +1,15 @@
+// No LogMovimentacaoControllerV2.java
 package com.example.Tozin_Solutions_back_end.V2.infrastructure.web.logMovimentacaoWeb;
 
-import com.example.Tozin_Solutions_back_end.V2.core.application.logMovimentacaoApplication.dto.LogMovimentacaoOutput;
+import com.example.Tozin_Solutions_back_end.V2.core.application.logMovimentacaoApplication.dto.*;
 import com.example.Tozin_Solutions_back_end.V2.core.application.logMovimentacaoApplication.useCase.BuscarLogsPorPeriodoUseCase;
+import com.example.Tozin_Solutions_back_end.V2.core.application.logMovimentacaoApplication.useCase.ListarLogsMovimentacaoPaginadosUseCase;
 import com.example.Tozin_Solutions_back_end.V2.core.application.logMovimentacaoApplication.useCase.ListarTodosLogsMovimentacaoUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,11 +21,14 @@ public class LogMovimentacaoControllerV2 {
 
     private final ListarTodosLogsMovimentacaoUseCase listarTodosLogsMovimentacaoUseCase;
     private final BuscarLogsPorPeriodoUseCase buscarLogsPorPeriodoUseCase;
+    private final ListarLogsMovimentacaoPaginadosUseCase listarLogsMovimentacaoPaginadosUseCase;
 
     public LogMovimentacaoControllerV2(ListarTodosLogsMovimentacaoUseCase listarTodosLogsMovimentacaoUseCase,
-                                       BuscarLogsPorPeriodoUseCase buscarLogsPorPeriodoUseCase) {
+                                       BuscarLogsPorPeriodoUseCase buscarLogsPorPeriodoUseCase,
+                                       ListarLogsMovimentacaoPaginadosUseCase listarLogsMovimentacaoPaginadosUseCase) {
         this.listarTodosLogsMovimentacaoUseCase = listarTodosLogsMovimentacaoUseCase;
         this.buscarLogsPorPeriodoUseCase = buscarLogsPorPeriodoUseCase;
+        this.listarLogsMovimentacaoPaginadosUseCase = listarLogsMovimentacaoPaginadosUseCase;
     }
 
     @GetMapping
@@ -34,6 +36,28 @@ public class LogMovimentacaoControllerV2 {
     public ResponseEntity<List<LogMovimentacaoOutput>> listarTodos() {
         List<LogMovimentacaoOutput> logs = listarTodosLogsMovimentacaoUseCase.executar();
         return ResponseEntity.ok(logs);
+    }
+
+    @GetMapping("/listarPaginado")
+    @Operation(summary = "Lista movimentações com paginação")
+    public ResponseEntity<LogMovimentacaoPaginationResponse> listarPaginado(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "dataMovimentacao") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDirection,
+            @RequestParam(required = false) String filter,
+            @RequestParam(required = false) String tipoPeca,
+            @RequestParam(required = false) String acao) {
+
+        LogMovimentacaoPaginationRequest request = new LogMovimentacaoPaginationRequest(
+                page, size, sortBy, sortDirection,
+                filter != null ? filter : "",
+                tipoPeca != null ? tipoPeca : "",
+                acao != null ? acao : ""
+        );
+
+        LogMovimentacaoPaginationResponse response = listarLogsMovimentacaoPaginadosUseCase.executar(request);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/filtro/periodo")

@@ -3,6 +3,8 @@ package com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.PecaP
 import com.example.Tozin_Solutions_back_end.V2.core.application.pecaApplication.port.PecaRepositoryPort;
 import com.example.Tozin_Solutions_back_end.V2.core.domain.PecaDomain.Peca;
 import com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.PecaPersistence.mapper.PecaMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -42,6 +44,20 @@ public class PecaRepositoryAdapter implements PecaRepositoryPort {
         return pecaJpaRepository.findAllByOrderByNomeAsc().stream()
                 .map(PecaMapper::toDomain)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<Peca> buscarTodasPaginadas(Pageable pageable, String filter) {
+        if (filter != null && !filter.trim().isEmpty()) {
+            // Se há filtro, buscar por nome
+            return pecaJpaRepository.findByNomeContainingIgnoreCase(
+                    filter.trim(),
+                    pageable
+            ).map(PecaMapper::toDomain);
+        } else {
+            // Sem filtro, buscar todas
+            return pecaJpaRepository.findAll(pageable).map(PecaMapper::toDomain);
+        }
     }
 
     @Override

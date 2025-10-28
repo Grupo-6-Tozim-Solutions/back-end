@@ -1,0 +1,8 @@
+package com.example.Tozin_Solutions_back_end.V2.core.application.logMovimentacaoApplication.useCase;
+
+import com.example.Tozin_Solutions_back_end.V2.core.application.logMovimentacaoApplication.dto.LogMovimentacaoPaginationRequest;
+import com.example.Tozin_Solutions_back_end.V2.core.application.logMovimentacaoApplication.dto.LogMovimentacaoPaginationResponse;
+
+public interface ListarLogsMovimentacaoPaginadosUseCase {
+    LogMovimentacaoPaginationResponse executar(LogMovimentacaoPaginationRequest request);
+}

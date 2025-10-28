@@ -3,6 +3,8 @@ package com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.logMo
 import com.example.Tozin_Solutions_back_end.V2.core.application.logMovimentacaoApplication.port.LogMovimentacaoPort;
 import com.example.Tozin_Solutions_back_end.V2.core.domain.logMovimentacaoDomain.LogMovimentacao;
 import com.example.Tozin_Solutions_back_end.V2.infrastructure.persistence.logMovimentacaoPersistence.mapper.LogMovimentacaoMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -44,5 +46,15 @@ public class LogMovimentacaoRepositoryAdapter implements LogMovimentacaoPort {
         return logMovimentacaoJpaRepository.findById(id)
                 .map(LogMovimentacaoMapper::toDomain)
                 .orElse(null);
+    }
+
+    @Override
+    public Page<LogMovimentacao> buscarTodosPaginados(Pageable pageable, String filter, String tipoPeca, String acao) {
+        return logMovimentacaoJpaRepository.findAllWithFilters(
+                filter,
+                tipoPeca,
+                acao,
+                pageable
+        ).map(LogMovimentacaoMapper::toDomain);
     }
 }
