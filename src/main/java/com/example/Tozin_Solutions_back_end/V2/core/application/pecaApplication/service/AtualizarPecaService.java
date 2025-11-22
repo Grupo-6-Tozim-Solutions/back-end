@@ -10,6 +10,8 @@ import com.example.Tozin_Solutions_back_end.V2.core.domain.PecaDomain.valueObjec
 import com.example.Tozin_Solutions_back_end.V2.core.domain.PecaDomain.valueObjects.Quantidade;
 import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.excepetion.DomainException;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.CacheEvict;
+
 
 @Service
 public class AtualizarPecaService implements AtualizarPecaUseCase {
@@ -21,6 +23,7 @@ public class AtualizarPecaService implements AtualizarPecaUseCase {
     }
 
     @Override
+    @CacheEvict(value = "pecasPaginadas", allEntries = true)
     public PecaOutput executar(Long id, AtualizarPecaInput input) {
         Peca peca = pecaRepositoryPort.buscarPorId(id)
                 .orElseThrow(() -> new PecaNaoEncontradaException(id));

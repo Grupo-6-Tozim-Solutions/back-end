@@ -13,6 +13,8 @@ import com.example.Tozin_Solutions_back_end.V2.core.domain.PecaDomain.valueObjec
 import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.excepetion.DomainException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.CacheEvict;
+
 
 
 @Service
@@ -29,6 +31,7 @@ public class CadastrarPecaService implements CadastrarPecaUseCase {
 
     @Override
     @Transactional
+    @CacheEvict(value = "pecasPaginadas", allEntries = true)
     public PecaOutput executar(CadastrarPecaInput input) {
         if (pecaRepositoryPort.existePorNome(input.nome())) {
             throw new IllegalArgumentException("Já existe uma peça com esse nome");

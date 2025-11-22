@@ -5,6 +5,7 @@ import com.example.Tozin_Solutions_back_end.V2.core.application.pecaApplication.
 import com.example.Tozin_Solutions_back_end.V2.core.application.pecaApplication.port.PecaRepositoryPort;
 import com.example.Tozin_Solutions_back_end.V2.core.application.pecaApplication.useCase.ListarPecasPaginadasUseCase;
 import com.example.Tozin_Solutions_back_end.V2.core.domain.PecaDomain.Peca;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,14 @@ public class ListarPecasPaginadasService implements ListarPecasPaginadasUseCase 
         this.pecaRepositoryPort = pecaRepositoryPort;
     }
     @Override
+    @Cacheable(
+            value = "pecasPaginadas",
+            key = "T(String).valueOf(#request.page())" +
+                    " + '-' + #request.size()" +
+                    " + '-' + #request.sortBy()" +
+                    " + '-' + #request.sortDirection()" +
+                    " + '-' + #request.filter()"
+    )
     public PecaPaginationResponse executar(PecaPaginationRequest request) {
         Sort sort = Sort.by(
                 request.sortDirection().equalsIgnoreCase("desc") ?
