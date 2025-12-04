@@ -16,7 +16,7 @@ on:
 
 # Permissions required by dependency submission action
 permissions:
-  contents: read
+  contents: write
   security-events: write
 
 jobs:
