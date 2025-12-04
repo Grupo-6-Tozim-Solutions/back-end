@@ -37,6 +37,7 @@ public class PecaServiceTest {
     @Test
     public void deveCadastrarPeca_QuandoCadastroNomeValido() {
         CadastrarPecaDTO dto = new CadastrarPecaDTO("Parafuso", 100.0, 10.0);
+        dto.setTipo("PECA");
         Peca peca = new Peca();
         peca.setNome("Parafuso");
         peca.setQuantidadeEstoque(100.0);
@@ -53,6 +54,7 @@ public class PecaServiceTest {
     @Test
     public void deveLancarErro_QuandoCadastroNomeVazio() {
         CadastrarPecaDTO dto = new CadastrarPecaDTO("", 100.0, 10.0);
+        dto.setTipo("PECA");
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> pecaService.salvarPeca(dto));
         assertEquals("400 BAD_REQUEST \"A peça deve ter um nome\"", ex.getMessage());
@@ -62,6 +64,7 @@ public class PecaServiceTest {
     public void deveLancarErro_QuandoCadastroNomeLongo() {
         String nomeLongo = "A".repeat(41);
         CadastrarPecaDTO dto = new CadastrarPecaDTO(nomeLongo, 100.0, 10.0);
+        dto.setTipo("PECA");
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> pecaService.salvarPeca(dto));
         assertEquals("400 BAD_REQUEST \"O nome da peça não pode ter mais de 40 caracteres\"", ex.getMessage());
@@ -70,6 +73,7 @@ public class PecaServiceTest {
     @Test
     public void deveLancarErro_QuandoCadastroNomeCurto() {
         CadastrarPecaDTO dto = new CadastrarPecaDTO("AB", 100.0, 10.0);
+        dto.setTipo("PECA");
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> pecaService.salvarPeca(dto));
         assertEquals("400 BAD_REQUEST \"O nome da peça não pode ter menos de 3 caracteres\"", ex.getMessage());
@@ -78,6 +82,7 @@ public class PecaServiceTest {
     @Test
     public void deveLancarErro_QuandoCadastroNomeJaExistente() {
         CadastrarPecaDTO dto = new CadastrarPecaDTO("Parafuso", 100.0, 10.0);
+        dto.setTipo("PECA");
 
         when(repository.existsByNomeIgnoreCase("Parafuso")).thenReturn(true);
 
@@ -107,7 +112,8 @@ public class PecaServiceTest {
 
         when(repository.findById(1L)).thenReturn(Optional.of(peca));
 
-        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> pecaService.atualizarPeca(1L, dto));
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+                () -> pecaService.atualizarPeca(1L, dto));
         assertEquals("400 BAD_REQUEST \"O nome da peça não pode ter mais de 25 caracteres\"", ex.getMessage());
     }
 
@@ -118,7 +124,8 @@ public class PecaServiceTest {
 
         when(repository.findById(1L)).thenReturn(Optional.of(peca));
 
-        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> pecaService.atualizarPeca(1L, dto));
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+                () -> pecaService.atualizarPeca(1L, dto));
         assertEquals("400 BAD_REQUEST \"O nome da peça não pode ter menos de 3 caracteres\"", ex.getMessage());
     }
 
@@ -130,7 +137,8 @@ public class PecaServiceTest {
         when(repository.findById(1L)).thenReturn(Optional.of(peca));
         when(repository.existsByNomeIgnoreCase("Parafuso")).thenReturn(true);
 
-        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> pecaService.atualizarPeca(1L, dto));
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+                () -> pecaService.atualizarPeca(1L, dto));
         assertEquals("400 BAD_REQUEST \"Já existe uma peça com esse nome\"", ex.getMessage());
     }
 
@@ -141,7 +149,8 @@ public class PecaServiceTest {
 
         when(repository.findById(1L)).thenReturn(Optional.of(peca));
 
-        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> pecaService.atualizarPeca(1L, dto));
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+                () -> pecaService.atualizarPeca(1L, dto));
         assertEquals("400 BAD_REQUEST \"O nome da peça não pode estar vazio\"", ex.getMessage());
     }
 
