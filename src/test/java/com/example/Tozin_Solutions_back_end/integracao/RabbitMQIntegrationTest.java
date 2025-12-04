@@ -34,7 +34,8 @@ public class RabbitMQIntegrationTest {
         // Verifica que o produtor foi chamado
         producer.enviarParaFila(notificacao);
 
-        // Verifica que o RabbitTemplate.convertAndSend (exchange, routingKey, message) foi chamado
+        // Verifica que o RabbitTemplate.convertAndSend (exchange, routingKey, message)
+        // foi chamado
         verify(rabbitTemplate).convertAndSend(anyString(), anyString(), any(Object.class));
     }
 }
