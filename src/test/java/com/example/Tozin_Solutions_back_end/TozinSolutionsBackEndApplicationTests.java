@@ -12,7 +12,7 @@ import com.example.Tozin_Solutions_back_end.TestConfig;
 class TozinSolutionsBackEndApplicationTests {
 
 	@Test
-	void contextLoads() {	
+	void contextLoads() {
 	}
 
 }
