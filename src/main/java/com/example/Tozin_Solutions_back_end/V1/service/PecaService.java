@@ -100,8 +100,8 @@ PecaService {
                 if(nome.isBlank()) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome da peça não pode estar vazio");
                 }
-                if(nome.length() > 40) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome da peça não pode ter mais de 40 caracteres");
+                if(nome.length() > 25) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome da peça não pode ter mais de 25 caracteres");
                 }
                 if(nome.length() < 3) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome da peça não pode ter menos de 3 caracteres");

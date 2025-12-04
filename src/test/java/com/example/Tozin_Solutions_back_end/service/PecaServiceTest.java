@@ -67,7 +67,7 @@ public class PecaServiceTest {
         dto.setTipo("PECA");
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> pecaService.salvarPeca(dto));
-        assertEquals("400 BAD_REQUEST \"O nome da peça não pode ter mais de 40 caracteres\"", ex.getMessage());
+        assertEquals("400 BAD_REQUEST \"O nome da peça não pode ter mais de 25 caracteres\"", ex.getMessage());
     }
 
     @Test
