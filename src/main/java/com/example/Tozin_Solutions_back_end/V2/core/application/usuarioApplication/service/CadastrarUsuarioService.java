@@ -12,8 +12,12 @@ import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.valueOb
 import com.example.Tozin_Solutions_back_end.V2.core.domain.usuarioDomain.valueObjects.SenhaHash;
 import com.example.Tozin_Solutions_back_end.V2.infrastructure.messaging.RabbitMQNotificacaoProducer;
 import jakarta.persistence.Id;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class    CadastrarUsuarioService implements CadastrarUsuarioUseCase {
+
+    private static final Logger logger = LoggerFactory.getLogger(CadastrarUsuarioService.class);
 
     private final UsuarioRepositoryPort usuarioRepositoryPort;
     private final PasswordHasherPort passwordHasherPort;
@@ -42,7 +46,15 @@ public class    CadastrarUsuarioService implements CadastrarUsuarioUseCase {
                 new SenhaHash(senhaHash)
         );
         var salvo = usuarioRepositoryPort.salvar(usuario);
-        notificacaoProducer.enviarEmailBoasVindas(salvo.getEmail().value(), salvo.getNome().value());
+
+        // Envia notificação de boas-vindas ao RabbitMQ — falhas aqui não devem impedir o cadastro
+        try {
+            notificacaoProducer.enviarEmailBoasVindas(salvo.getEmail().value(), salvo.getNome().value());
+        } catch (Exception e) {
+            // Loga o erro e segue; evita que a ausência do RabbitMQ quebre o fluxo de cadastro
+            logger.warn("Falha ao enviar mensagem ao RabbitMQ (notificacao de boas-vindas): {}", e.getMessage());
+        }
+
         return new UsuarioOutput(salvo.getNome().value(), salvo.getEmail().value());
     }
 }
