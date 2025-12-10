@@ -30,7 +30,7 @@ public class RabbitMQNotificacaoConsumer {
 
 
             if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-                System.err.println("❌ E-mail inválido: " + email);
+                System.err.println("E-mail inválido: " + email);
                 return;
             }
 
