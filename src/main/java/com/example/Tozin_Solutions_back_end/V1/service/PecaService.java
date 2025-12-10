@@ -17,8 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class
-PecaService {
+public class PecaService {
 
     @Autowired
     private PecaRepository repository;
@@ -26,7 +25,7 @@ PecaService {
     @Autowired
     private MovimentacaoEstoqueService movimentacaoService;
 
-    public Peca salvarPeca(@Valid CadastrarPecaDTO dadosNovaPeca){
+    public Peca salvarPeca(@Valid CadastrarPecaDTO dadosNovaPeca) {
         Peca novaPeca = new Peca();
 
         novaPeca.setNome(dadosNovaPeca.getNome());
@@ -34,37 +33,40 @@ PecaService {
         novaPeca.setQuantidadeMinima(dadosNovaPeca.getQuantidadeMinima());
         novaPeca.setTipo(TipoPeca.valueOf(dadosNovaPeca.getTipo()));
 
-        if(novaPeca.getNome().isBlank()) {
+        if (novaPeca.getNome().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A peça deve ter um nome");
         }
-        if(novaPeca.getNome().length() > 25) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome da peça não pode ter mais de 25 caracteres");
+        if (novaPeca.getNome().length() > 25) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "O nome da peça não pode ter mais de 25 caracteres");
         }
-        if(novaPeca.getNome().length() < 3) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome da peça não pode ter menos de 3 caracteres");
+        if (novaPeca.getNome().length() < 3) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "O nome da peça não pode ter menos de 3 caracteres");
         }
-        if(repository.existsByNomeIgnoreCase(novaPeca.getNome())) {
+        if (repository.existsByNomeIgnoreCase(novaPeca.getNome())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Já existe uma peça com esse nome");
         }
 
         repository.save(novaPeca);
 
-        RegistrarMovimentacaoDTO novaMovimentacao = new RegistrarMovimentacaoDTO(0.0, dadosNovaPeca.getQuantidadeEstoque(), novaPeca);
+        RegistrarMovimentacaoDTO novaMovimentacao = new RegistrarMovimentacaoDTO(0.0,
+                dadosNovaPeca.getQuantidadeEstoque(), novaPeca);
         movimentacaoService.registrarMovimentacao(novaMovimentacao);
         return novaPeca;
     }
 
-    public List<Peca> listarTodas(){
+    public List<Peca> listarTodas() {
         return repository.findAll();
     }
 
-    public Optional<Peca> buscarPorId(Long id){
+    public Optional<Peca> buscarPorId(Long id) {
         return repository.findById(id);
     }
 
-    public Optional<Peca> adicionarQuantidadeEstoque(Long id, Double quantidadeAdicional){
+    public Optional<Peca> adicionarQuantidadeEstoque(Long id, Double quantidadeAdicional) {
         return repository.findById(id).map(peca -> {
-            if (quantidadeAdicional != null && quantidadeAdicional > 0){
+            if (quantidadeAdicional != null && quantidadeAdicional > 0) {
                 peca.setQuantidadeEstoque(peca.getQuantidadeEstoque() + quantidadeAdicional);
                 RegistrarMovimentacaoDTO movimentacao = new RegistrarMovimentacaoDTO(0.0, quantidadeAdicional, peca);
                 movimentacaoService.registrarMovimentacao(movimentacao);
@@ -73,9 +75,9 @@ PecaService {
         });
     }
 
-    public Optional<Peca> removerQuantidadeEstoque(Long id, Double quantidadeRemovida){
+    public Optional<Peca> removerQuantidadeEstoque(Long id, Double quantidadeRemovida) {
         return repository.findById(id).map(peca -> {
-            if (quantidadeRemovida != null && quantidadeRemovida > 0){
+            if (quantidadeRemovida != null && quantidadeRemovida > 0) {
                 peca.setQuantidadeEstoque(peca.getQuantidadeEstoque() - quantidadeRemovida);
                 RegistrarMovimentacaoDTO movimentacao = new RegistrarMovimentacaoDTO(quantidadeRemovida, 0.0, peca);
                 movimentacaoService.registrarMovimentacao(movimentacao);
@@ -84,7 +86,7 @@ PecaService {
         });
     }
 
-    public List<Peca> verificarPecasComValorCritico(){
+    public List<Peca> verificarPecasComValorCritico() {
         List<Peca> todasPecas = repository.findAll();
 
         List<Peca> pecasComValorCritico = todasPecas.stream()
@@ -93,26 +95,28 @@ PecaService {
         return pecasComValorCritico;
     }
 
-    public Optional<Peca> atualizarPeca(Long id,@Valid AtualizarPecaDTO novosDados){
+    public Optional<Peca> atualizarPeca(Long id, @Valid AtualizarPecaDTO novosDados) {
         return repository.findById(id).map(peca -> {
-            if(novosDados.getNome() != null) {
+            if (novosDados.getNome() != null) {
                 String nome = novosDados.getNome();
-                if(nome.isBlank()) {
+                if (nome.isBlank()) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome da peça não pode estar vazio");
                 }
-                if(nome.length() > 40) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome da peça não pode ter mais de 40 caracteres");
+                if (nome.length() > 25) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                            "O nome da peça não pode ter mais de 25 caracteres");
                 }
-                if(nome.length() < 3) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome da peça não pode ter menos de 3 caracteres");
+                if (nome.length() < 3) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                            "O nome da peça não pode ter menos de 3 caracteres");
                 }
-                if(repository.existsByNomeIgnoreCase(nome) && !peca.getNome().equalsIgnoreCase(nome)) {
+                if (repository.existsByNomeIgnoreCase(nome) && !peca.getNome().equalsIgnoreCase(nome)) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Já existe uma peça com esse nome");
                 }
                 peca.setNome(nome);
             }
 
-            if (novosDados.getQuantidadeMinima() != null){
+            if (novosDados.getQuantidadeMinima() != null) {
                 peca.setQuantidadeMinima(novosDados.getQuantidadeMinima());
             }
 
